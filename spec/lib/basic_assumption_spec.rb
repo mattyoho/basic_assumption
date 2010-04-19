@@ -1,74 +1,140 @@
 require 'spec_helper'
+require 'action_controller'
 
-class FakeController
-  def fake_params
+class Extender
+  def quack
     {:foo => :bar}
-  end
-  def self.hide_action(name)
-  end
-  def self.helper_method(name)
   end
 end
 
 describe BasicAssumption do
 
-  context "a controller extends BasicAssumption" do
+  context "when a class extends BasicAssumption" do
 
-    let(:controller_class) { Class.new(FakeController) }
-    let(:controller_instance) { controller_class.new }
+    let(:extender_class) { Class.new(Extender) }
+    let(:extender_instance) { extender_class.new }
     before(:each) do
-      controller_class.extend(BasicAssumption)
+      extender_class.extend(BasicAssumption)
     end
 
-    it "declares named resources via 'assume'" do
+    it "declares named resources via #assume" do
       expect {
-        controller_class.class_eval do
+        extender_class.class_eval do
           assume :resource_name
         end
       }.to_not raise_error(NoMethodError)
     end
 
     it "declares an instance method of the given name" do
-      controller_class.class_eval do
+      extender_class.class_eval do
         assume :my_method_name
       end
-      controller_instance.should respond_to(:my_method_name)
+      extender_instance.should respond_to(:my_method_name)
     end
 
-    it "invokes a given block as the method implementation" do
-      controller_class.class_eval do
-        assume(:resource) { 'this is my resource' }
+    context "the instance method" do
+      context "when no block was passed to assume" do
+        it "returns nil by default" do
+          extender_class.class_eval do
+            assume :by_default
+          end
+          extender_instance.by_default.should be_nil
+        end
+
+        context "when the default is overridden" do
+          it "returns the result of the overriding block" do
+            extender_class.class_eval do
+              default_assumption { 'overridden' }
+              assume :overriden
+            end
+            extender_instance.overriden.should eql('overridden')
+          end
+
+          it "executes the default in the context of the extending instance" do
+            extender_class.class_eval do
+              default_assumption { quack }
+              assume(:access_instance)
+            end
+            extender_instance.access_instance.should eql({:foo => :bar})
+          end
+
+          it "passes the name into the default block" do
+            extender_class.class_eval do
+              default_assumption { |name| name }
+              assume(:given_name)
+            end
+            extender_instance.given_name.should eql(:given_name)
+          end
+        end
       end
-      controller_instance.resource.should eql('this is my resource')
-    end
 
-    it "memoizes the result of the block for further method calls" do
-      controller_class.class_eval do
-        assume(:random_once) { "#{rand(1_000_000)} #{rand(1_000_000)}" }
+      context "when a block was passed" do
+        it "invokes the block as the method implementation" do
+          extender_class.class_eval do
+            assume(:resource) { 'this is my resource' }
+          end
+          extender_instance.resource.should eql('this is my resource')
+        end
+
+        it "executes in the context of the extending instance" do
+          extender_class.class_eval do
+            assume(:access_instance) { quack }
+          end
+          extender_instance.access_instance.should eql({:foo => :bar})
+        end
       end
-      controller_instance.random_once.should eql(controller_instance.random_once)
-    end
 
-    it "invokes the block in the context of the extending instance" do
-      controller_class.class_eval do
-        assume(:access_instance) { fake_params }
-      end
-      controller_instance.access_instance.should eql({:foo => :bar})
-    end
-
-    it "hides the method from being an action" do
-      controller_class.should_receive(:hide_action).with(:resource_name)
-      controller_class.class_eval do
-        assume(:resource_name)
-      end
-    end
-
-    it "makes the method visible in views" do
-      controller_class.should_receive(:helper_method).with(:resource_name)
-      controller_class.class_eval do
-        assume(:resource_name)
+      it "memoizes the result for further calls" do
+        extender_class.class_eval do
+          assume(:random_once) { "#{rand(1_000_000)} #{rand(1_000_000)}" }
+        end
+        extender_instance.random_once.should eql(extender_instance.random_once)
       end
     end
   end
 
+  context "within Rails" do
+    before(:all) do
+      require 'rails/init.rb'
+    end
+    let(:controller_class) { Class.new(::ActionController::Base) }
+    let(:controller_instance) { controller_class.new }
+
+    it "is extended by ActionController::Base" do
+      ::ActionController::Base.should respond_to(:assume)
+    end
+
+    context "the instance method created by #assume" do
+      it "is hidden from being an action" do
+        controller_class.should_receive(:hide_action).with(:resource_name)
+        controller_class.class_eval do
+          assume(:resource_name)
+        end
+      end
+
+      it "is visible in views" do
+        controller_class.should_receive(:helper_method).with(:resource_name)
+        controller_class.class_eval do
+          assume(:resource_name)
+        end
+      end
+    end
+
+    context "classes derived from ActionController::Base" do
+      before do
+        ::ActionController::Base.class_eval do
+          default_assumption { |name| "#{name}#{name}" }
+        end
+      end
+      let(:derived_class) { Class.new(controller_class) }
+      let(:derived_instance) { derived_class.new }
+
+      it "inherit the default assumption" do
+        derived_class.class_eval do
+          assume(:twice)
+        end
+        derived_instance.twice.should eql('twicetwice')
+      end
+    end
+  end
 end

@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
   s.name = %q{basic_assumption}
-  s.version = "0.1"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Yoho"]
   s.date = %q{2010-04-17}
   s.description = %q{
-    Allows a simple declarative idiom for resources in controllers and views
+    Allows a simple declarative idiom for accessing resources in controllers and views
     }
   s.email = %q{mby@mattyoho.com}
   s.extra_rdoc_files = [
@@ -15,7 +15,8 @@ Gem::Specification.new do |s|
   s.files = [
      "README.md",
      "VERSION",
-     "lib/basic_assumption.rb"
+     "lib/basic_assumption.rb",
+     "rails/init.rb"
   ]
   s.homepage = %q{http://github.com/mattyoho/basic_assumption}
   s.rdoc_options = ["--charset=UTF-8"]
