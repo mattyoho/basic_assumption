@@ -121,19 +121,33 @@ describe BasicAssumption do
     end
 
     context "classes derived from ActionController::Base" do
-      before do
-        ::ActionController::Base.class_eval do
+      let(:application_controller) { Class.new(controller_class) }
+      let(:derived_class) { Class.new(application_controller) }
+      let(:derived_instance) { derived_class.new }
+
+      before(:all) do
+        application_controller.class_eval do
           default_assumption { |name| "#{name}#{name}" }
         end
       end
-      let(:derived_class) { Class.new(controller_class) }
-      let(:derived_instance) { derived_class.new }
 
       it "inherit the default assumption" do
         derived_class.class_eval do
           assume(:twice)
         end
         derived_instance.twice.should eql('twicetwice')
+      end
+    end
+
+    context "the default assumption" do
+      class ::Model; end
+      it "attempts to find an instance of a model class inferred from the name" do
+        controller_class.class_eval do
+          assume(:model)
+        end
+        controller_instance.stub(:params => {'id' => 123})
+        ::Model.should_receive(:find).with(123)
+        controller_instance.model.should be_a_kind_of(Object)
       end
     end
   end

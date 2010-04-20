@@ -11,4 +11,9 @@ ActionController::Base.class_eval do
     hide_action name
     helper_method name
   end
+
+  default_assumption do |name|
+    model_class = name.to_s.classify.constantize
+    model_class.find(params["#{name}_id"] || params['id'])
+  end
 end
