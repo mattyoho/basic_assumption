@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = %q{basic_assumption}
-  s.version = "0.2.2"
+  s.version = "0.2.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Yoho"]
@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
      "README.md",
      "VERSION",
      "lib/basic_assumption.rb",
+     "lib/basic_assumption/configuration.rb",
      "rails/init.rb"
   ]
   s.homepage = %q{http://github.com/mattyoho/basic_assumption}
@@ -25,7 +26,8 @@ Gem::Specification.new do |s|
   s.summary = %q{Allows a simple declarative idiom for resources in controllers and views}
   s.test_files = [
     "spec/spec_helper.rb",
-    "spec/lib/basic_assumption_spec.rb"
+    "spec/lib/basic_assumption_spec.rb",
+    "spec/lib/basic_assumption/configuration_spec.rb"
   ]
 
   if s.respond_to? :specification_version then

@@ -1,3 +1,5 @@
+require 'basic_assumption/configuration'
+
 module BasicAssumption
   def self.extended(base)
     base.default_assumption {}
