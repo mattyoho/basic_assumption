@@ -120,7 +120,7 @@ describe BasicAssumption do
       end
     end
 
-    context "classes derived from ActionController::Base" do
+    context "classes in the inheritance chain of ActionController::Base" do
       let(:application_controller) { Class.new(controller_class) }
       let(:derived_class) { Class.new(application_controller) }
       let(:derived_instance) { derived_class.new }
@@ -131,7 +131,7 @@ describe BasicAssumption do
         end
       end
 
-      it "inherit the default assumption" do
+      it "inherits the default assumption" do
         derived_class.class_eval do
           assume(:twice)
         end

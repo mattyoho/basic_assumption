@@ -8,14 +8,26 @@ describe BasicAssumption::Configuration do
   end
 
   context "an instance" do
-    class Exposer
+    class Assumer
       extend BasicAssumption
     end
-    let(:instance) { BasicAssumption::Configuration.new }
-    let(:exposing_class) { Exposer }
+    let(:config) { BasicAssumption::Configuration.new }
+    let(:assuming_class) { Class.new Assumer }
     it "allows decent_exposure emulation mode" do
-      instance.emulate_exposure!
-      exposing_class.should respond_to(:expose)
+      config.emulate_exposure!
+      assuming_class.should respond_to(:expose)
+    end
+
+    it "can set the default assumption" do
+      config.default_assumption = Proc.new { :qux }
+      assuming_class.class_eval do
+        assume :baz
+      end
+      assuming_class.new.baz.should eql(:qux)
+    end
+
+    after(:all) do
+      config.default_assumption = nil
     end
   end
 end

@@ -10,5 +10,9 @@ module BasicAssumption
         alias default_exposure default_assumption
       end
     end
+
+    def default_assumption=(value)
+      BasicAssumption::DefaultAssumption.default = value
+    end
   end
 end

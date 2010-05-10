@@ -1,14 +1,10 @@
 require 'basic_assumption/configuration'
+require 'basic_assumption/default_assumption'
 
 module BasicAssumption
-  def self.extended(base)
-    base.default_assumption {}
-  end
-
-  def default_assumption(&block)
-    define_method(:default_assumption) do
-      block
-    end
+  def default_assumption(symbol=nil, &block)
+    default = block_given? ? block : symbol
+    BasicAssumption::DefaultAssumption.register(self, default)
   end
 
   def assume(name, &block)
@@ -17,7 +13,8 @@ module BasicAssumption
       @basic_assumptions[name] ||= if block_given?
         instance_eval(&block)
       else
-        instance_exec(name, &default_assumption)
+        block = BasicAssumption::DefaultAssumption.resolve(self.class)
+        instance_exec(name, &block)
       end
     end
     after_assumption(name)

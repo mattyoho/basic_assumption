@@ -1,8 +1,5 @@
-begin
-  require File.join(File.dirname(__FILE__), 'lib', 'basic_assumption')
-rescue LoadError
-  require 'basic_assumption'
-end
+require 'basic_assumption'
+require 'basic_assumption/default_assumption/rails'
 
 ActionController::Base.class_eval do
   extend BasicAssumption
@@ -11,9 +8,8 @@ ActionController::Base.class_eval do
     hide_action name
     helper_method name
   end
+end
 
-  default_assumption do |name|
-    model_class = name.to_s.classify.constantize
-    model_class.find(params["#{name}_id"] || params['id'])
-  end
+BasicAssumption::Configuration.configure do |config|
+  config.default_assumption = :simple_rails
 end
