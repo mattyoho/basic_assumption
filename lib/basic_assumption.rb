@@ -29,7 +29,7 @@ module BasicAssumption
   #  end
   def default_assumption(name=nil, &block)
     default = block_given? ? block : name
-    BasicAssumption::DefaultAssumption.register(self, default)
+    DefaultAssumption.register(self, default)
   end
 
   # Declares a resource at the instance level by creating an instance method
@@ -63,7 +63,7 @@ module BasicAssumption
       @basic_assumptions[name] ||= if block_given?
         instance_eval(&block)
       else
-        block = BasicAssumption::DefaultAssumption.resolve(self.class)
+        block = DefaultAssumption.resolve(self.class)
         instance_exec(name, &block)
       end
     end
