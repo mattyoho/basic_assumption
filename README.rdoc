@@ -1,0 +1,19 @@
+= BasicAssumption
+
+A clone of decent_exposure with a psuedo-modular interface for providing
+custom defaults. Check the configuration options for enabling the
+decent_exposure API.
+
+== What is DecentExposure?
+
+It's a plugin written by voxdolo/Stephen Cuadill that provides a way of
+cleaning up Rails controller and view code. It's available at
+http://github.com/voxdolo/decent_exposure.
+
+Beyond its implementation, it represents an idiom for writing certain kinds
+of code in a declarative way. Particularly in your Rails apps, it's worth
+checking out. BasicAssumption is another implementation of the idiom.
+
+== Examples
+
+Are yet to come...
