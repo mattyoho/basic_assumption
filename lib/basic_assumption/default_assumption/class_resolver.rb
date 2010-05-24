@@ -1,6 +1,6 @@
 module BasicAssumption
   module DefaultAssumption
-    class ClassResolver
+    class ClassResolver #:nodoc:
       def self.instance(name, *args)
         new(name).instance(*args)
       end
