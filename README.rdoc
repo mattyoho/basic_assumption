@@ -6,7 +6,7 @@ methods that is useful in Rails applications.
 
 === What is DecentExposure?
 
-It's a plugin written by {Stephen Cuadill}[http://www.twitter.com/voxdolo] that provides a way of
+It's a plugin written by {Stephen Cuadill}[http://voxdolo.me/] that provides a way of
 cleaning up Rails controller and view code. Find it at
 {its GitHub repository}[http://github.com/voxdolo/decent_exposure].
 
@@ -198,6 +198,8 @@ manager. For example, if RubyGems:
 
     export RUBYOPT=rubygems
 
+If you're unfamiliar with why this is being done, take a look
+{here for a start}[http://tomayko.com/writings/require-rubygems-antipattern].
 Other than that, please feel free to fork and send back pull requests! Thanks.
 
 == But should I use it?
