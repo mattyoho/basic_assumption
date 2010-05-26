@@ -6,7 +6,7 @@ methods that is useful in Rails applications.
 
 === What is DecentExposure?
 
-It's a plugin written by {Stephen Cuadill}[http://voxdolo.me/] that provides a way of
+It's a plugin written by {Stephen Caudill}[http://voxdolo.me/] that provides a way of
 cleaning up Rails controller and view code. Find it at
 {its GitHub repository}[http://github.com/voxdolo/decent_exposure].
 
@@ -52,7 +52,7 @@ available inside your controllers.
 The most important (of the few) methods made available in controller classes is
 +assume+, which is used to declaratively define a resource of some kind in
 controller instances and to make that resource available inside corresponding
-views. For all the verbiage of the description, it's a simple concept, as
+views. For all the wordiness of the description, it's a simple concept, as
 illustrated below. First, we will use +assume+ to expose a resource inside our
 controller actions that will take the value resulting from the block passed to
 +assume+. In this case, the resource will be called 'widget':
@@ -96,15 +96,34 @@ probably use an assumption instead. Because BasicAssumption is written to use
 lazy evaluation, there's no need to worry about avoiding calls on actions that
 don't need some particular setup.
 
+For example, this:
+
+    class RecordController < ActionController::Base
+      before_filter :find_record, :only => [:show, :edit, :update, :destroy]
+
+      ...
+
+      protected
+      def find_record
+        @record = Record.find(params[:record_id] || params[:id])
+      end
+    end
+
+would become this:
+
+    class RecordController < ActionController::Base
+      assume :record
+    end
+
+and would have the added benefit of not tossing instance variables around.
 If a controller has protected or hidden methods that find or create instance
 variables used in actions and/or views, it might be cleaner to use an
 assumption instead.
 
 BasicAssumption allows for a simple, declarative, and very lightweight approach
-to RESTful controllers.
-
-It also can make for a cleaner, more testable interface for controller or view
-testing. There may even be uses outside of Rails apps. Give it a shot.
+to RESTful controllers.  It also can make for a cleaner, more testable interface
+for controller or view testing. There may even be uses outside of Rails apps.
+Give it a shot.
 
 === Defaults
 
