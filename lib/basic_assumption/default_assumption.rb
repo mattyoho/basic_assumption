@@ -44,7 +44,7 @@ module BasicAssumption
       registry[klass.object_id]
     end
 
-    class << self 
+    class << self
       attr_accessor :default #:nodoc:
 
       protected
