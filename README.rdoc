@@ -1,19 +1,139 @@
-= BasicAssumption
+== BasicAssumption
 
-A clone of decent_exposure with a psuedo-modular interface for providing
-custom defaults. Check the configuration options for enabling the
-decent_exposure API.
+A clone of DecentExposure with a psuedo-modular interface for providing
+custom defaults.
 
-== What is DecentExposure?
+=== What is DecentExposure?
 
-It's a plugin written by voxdolo/Stephen Cuadill that provides a way of
-cleaning up Rails controller and view code. It's available at
-http://github.com/voxdolo/decent_exposure.
+It's a plugin written by {Stephen Cuadill}[http://www.twitter.com/voxdolo] that provides a way of
+cleaning up Rails controller and view code. Find it at
+{its GitHub repository}[http://github.com/voxdolo/decent_exposure].
 
-Beyond its implementation, it represents an idiom for writing certain kinds
-of code in a declarative way. Particularly in your Rails apps, it's worth
-checking out. BasicAssumption is another implementation of the idiom.
+It represents an idiom for writing certain kinds of code in a declarative way.
+Particularly in your Rails apps, it's worth checking out. BasicAssumption is
+another implementation of the idiom. It exists largely because I felt like
+practicing writing a gem, though it does have a differentiating feature or two.
+Check the configuration options for enabling compatibility with the
+DecentExposure API.
+
+== Install BasicAssumption
+
+It's a gem, so do the usual:
+
+    [sudo] gem install basic_assumption
+
+=== Using it in a Rails app
+
+For Rails 2, in environment.rb:
+
+    gem.config 'basic_assumption'
+
+For Rails 3, in your Gemfile:
+
+    gem 'basic_assumption', :require => ['basic_assumption', 'basic_assumption/rails']
+
+It's possible to use BasicAssumption in your Rails 3 app without requiring
+'basic_assumption/rails', and will in fact allow more flexibility if you don't,
+but will incure the cost of additional setup. See the file
+'lib/basic_assumption/rails.rb' for guidance.
+
+To use the library in another context, it is enough to extend the
+BasicAssumption module with the classes you would like to use it in.
 
 == Examples
 
-Are yet to come...
+=== Inside a Rails controller
+
+The presumed most-common use case for BasicAssumption is in a Rails app. By
+default, BasicAssumption is extended by ActionController::Base, making it
+available inside your controllers.
+
+The most important (of the few) methods made available in controller classes is
++assume+, which is used to declaratively define a resource of some kind in
+controller instances and to make that resource available inside corresponding
+views. For all the verbiage of the description, it's a simple concept, as
+illustrated below. First, we will use +assume+ to expose a resource inside our
+controller actions that will take the value resulting from the block passed to
++assume+. In this case, the resource will be called 'widget':
+
+    class WidgetController < ActionController::Base
+
+      assume(:widget) { Widget.find(params[:id]) }
+
+      ...
+
+      def purchase
+        current_user.purchase!(widget)
+        render :template => 'widgets/purchase_complete'
+      end
+    end
+
+And then inside of the 'widgets/purchase_complete.html.haml' view:
+
+    %h2= "#{current_user.name}, your purchase is complete!
+    .widget
+      %span#thanks
+        = "Thank you for purchasing #{widget.name}!"
+      %table#details
+        %tr
+          %td Cost
+          %td= widget.cost
+        %tr
+          %td Manufacturer
+          %td= widget.manufacturer
+
+By calling +assume+ with the symbol :widget and passing it a block, an instance
+method is created on the controller class that is also exposed as a helper
+inside views. For more details, please see the +Railtie+ documentation.
+
+=== Defaults
+
+BasicAssumption allows for default behavior to be associated with methods
+created by +assume+ whenever a block is not passed. Here is a simple example:
+
+    class WidgetController < ActionController::Base
+      default_assumption { Widget.find(params[:id]) }
+      assume(:widget)
+
+      ...
+    end
+
+This will provide the same behavior as the similar example above. In Rails,
+a helpful default is already made available. Please see +SimpleRails+ for
+a discussion.
+
+=== Supplying custome default behavior classes
+
+There is an ability to provide custom, modular default extensions to
+BasicAssumption. Please see the documentation for +DefaultAssumption+
+for a discussion and +SimpleRails+ for an example.
+
+=== Configuration
+
+There are a couple of simple configuration settings that can be set inside of
+a configuration block that can be used in places such as Rails initializer
+blocks. For more information, see +Configuration+.
+
+More are yet to come...
+
+== Issues
+
+=== Memoization
+
+Methods that are created by +assume+ memoize the result of the block the invoke
+when they're called. Because of that, the block is only evaluated once during
+the lifespan of each object of the class that used +assume+. This means that
+a method created by assuming can be used multiple times inside of a Rails
+controller object and associated view(s), but it also means that any behavior
+of the block that is meant to vary over multiple invocations will not be
+observerd.
+
+== Hacking/running specs
+
+There is nothing special about running the specs, aside from ensuring the
+RUBYOPT environment variable is set to your preferred Ruby dependency
+manager. For example, if RubyGems:
+
+    export RUBYOPT=rubygems
+
+Other than that, please feel free to fork and send back pull requests! Thanks.

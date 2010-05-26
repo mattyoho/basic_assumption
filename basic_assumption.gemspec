@@ -15,10 +15,10 @@ Gem::Specification.new do |s|
     }
   s.email = %q{mby@mattyoho.com}
   s.extra_rdoc_files = [
-    "README.md"
+    "README.rdoc"
   ]
   s.files = [
-     "README.md",
+     "README.rdoc",
      "lib/basic_assumption.rb",
      "lib/basic_assumption/configuration.rb",
      "lib/basic_assumption/default_assumption.rb",
@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = ">= 1.3.5"
-  s.summary = %q{Allows a simple declarative idiom for resources in controllers and views. Custom default behavior can be defined in a pluggable manner.}
+  s.summary = %q{Allows a simple declarative idiom for accessing resources in controllers and views, cleaning up controller code and removing the need to explicitly reference instance variables inside views. Custom default behavior can be defined in a pluggable manner.}
   s.test_files = [
     "spec/spec_helper.rb",
     "spec/lib/basic_assumption_spec.rb",
