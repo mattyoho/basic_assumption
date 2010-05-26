@@ -9,15 +9,17 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Yoho"]
-  s.date = %q{2010-05-25}
+  s.date = %q{2010-05-26}
   s.description = %q{
     Allows a simple declarative idiom for accessing resources in controllers and views
     }
   s.email = %q{mby@mattyoho.com}
   s.extra_rdoc_files = [
+    "LICENSE",
     "README.rdoc"
   ]
   s.files = [
+     "LICENSE",
      "README.rdoc",
      "lib/basic_assumption.rb",
      "lib/basic_assumption/configuration.rb",
