@@ -1,7 +1,8 @@
 == BasicAssumption
 
 A clone of DecentExposure with a psuedo-modular interface for providing
-custom defaults.
+custom defaults. It provides a declarative interface for specifying helper
+methods that is useful in Rails applications.
 
 === What is DecentExposure?
 
@@ -13,8 +14,8 @@ It represents an idiom for writing certain kinds of code in a declarative way.
 Particularly in your Rails apps, it's worth checking out. BasicAssumption is
 another implementation of the idiom. It exists largely because I felt like
 practicing writing a gem, though it does have a differentiating feature or two.
-Check the +Configuration+ options for enabling compatibility with the
-DecentExposure API.
+Check the BasicAssumption::Configuration options for enabling compatibility
+with the DecentExposure API.
 
 == Install BasicAssumption
 
@@ -84,7 +85,26 @@ And then inside of the 'widgets/purchase_complete.html.haml' view:
 
 By calling +assume+ with the symbol :widget and passing it a block, an instance
 method is created on the controller class that is also exposed as a helper
-inside views. For more details, please see the +Railtie+ documentation.
+inside views. For more details on how BasicAssumption is wired into your Rails
+app, please see the BasicAssumption::Railtie documentation.
+
+=== When to use it
+
+Whenever you find yourself writing a +before_filter+ in a Rails controller
+that sets instance variables as part of the context of your request, you should
+probably use an assumption instead. Because BasicAssumption is written to use
+lazy evaluation, there's no need to worry about avoiding calls on actions that
+don't need some particular setup.
+
+If a controller has protected or hidden methods that find or create instance
+variables used in actions and/or views, it might be cleaner to use an
+assumption instead.
+
+BasicAssumption allows for a simple, declarative, and very lightweight approach
+to RESTful controllers.
+
+It also can make for a cleaner, more testable interface for controller or view
+testing. There may even be uses outside of Rails apps. Give it a shot.
 
 === Defaults
 
@@ -130,7 +150,7 @@ Default assumptions are inherited by derived classes.
 === Supplying custom default behavior classes
 
 There is an ability to provide custom, modular default extensions to
-BasicAssumption and then use them by passing a symbol, like so:
+BasicAssumption and then use them by passing a symbol, as in the following:
 
     class WidgetController < ActionController::Base
       default_assumption :my_custom_default_class
@@ -145,19 +165,30 @@ BasicAssumption::DefaultAssumption namespace. Please see the documentation for
 
 There are a couple of simple configuration settings that can be set inside of
 a configuration block that can be used in places such as Rails initializer
-blocks. For more information, see +Configuration+.
+blocks. For more information, see BasicAssumption::Configuration.
 
 == Issues
 
 === Memoization
 
-Methods that are created by +assume+ memoize the result of the block the invoke
-when they're called. Because of that, the block is only evaluated once during
-the lifespan of each object of the class that used +assume+. This means that
-a method created by assuming can be used multiple times inside of a Rails
-controller object and associated view(s), but it also means that any behavior
-of the block that is meant to vary over multiple invocations will not be
-observerd.
+Methods that are created by BasicAssumption#assume memoize the result of the
+block the invoke when they're called. Because of that, the block is only
+evaluated once during the lifespan of each object of the class that used
++assume+. This means that a method created by assuming can be used multiple
+times inside of a Rails controller object and associated view(s) without
+invoking the associated block multiple times, but it also means that any
+behavior of the block that is meant to vary over multiple invocations will not
+be observed.
+
+=== Exceptions
+
+Using BasicAssumption may change the exception handling strategy inside your
+classes. In Rails, the +rescue_from+ method may be useful.
+
+=== Other
+
+There are probably others, and when I remember what they were, I'll write them
+up.
 
 == Hacking/running specs
 
@@ -168,3 +199,14 @@ manager. For example, if RubyGems:
     export RUBYOPT=rubygems
 
 Other than that, please feel free to fork and send back pull requests! Thanks.
+
+== But should I use it?
+
+Sure! Absolutely. I think it's a cool idea that lets you cut down on line
+noise, particularly in your Rails controllers. You may want to consider going
+with {DecentExposure}[http://github.com/voxdolo/decent_exposure], simply
+because it's used by much of {Hashrocket}[http://www.hashrocket.com/]
+and BasicAssumption is used, so far as I know, only by me. But so far as I know
+BasicAssumption is pretty solid, and I'm happy to accept bug fixes and field
+feature requests. If you use it, feel free to let me know! Email mby [at]
+mattyoho [dot] com with questions, comments, or non-sequiters.
