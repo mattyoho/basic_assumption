@@ -13,7 +13,7 @@ It represents an idiom for writing certain kinds of code in a declarative way.
 Particularly in your Rails apps, it's worth checking out. BasicAssumption is
 another implementation of the idiom. It exists largely because I felt like
 practicing writing a gem, though it does have a differentiating feature or two.
-Check the configuration options for enabling compatibility with the
+Check the +Configuration+ options for enabling compatibility with the
 DecentExposure API.
 
 == Install BasicAssumption
@@ -34,18 +34,18 @@ For Rails 3, in your Gemfile:
 
 It's possible to use BasicAssumption in your Rails 3 app without requiring
 'basic_assumption/rails', and will in fact allow more flexibility if you don't,
-but will incure the cost of additional setup. See the file
+but will incur the cost of additional setup. See the file
 'lib/basic_assumption/rails.rb' for guidance.
 
 To use the library in another context, it is enough to extend the
-BasicAssumption module with the classes you would like to use it in.
+BasicAssumption module inside the class you would like it available.
 
 == Examples
 
 === Inside a Rails controller
 
 The presumed most-common use case for BasicAssumption is in a Rails app. By
-default, BasicAssumption is extended by ActionController::Base, making it
+default, BasicAssumption is extended within ActionController::Base, making it
 available inside your controllers.
 
 The most important (of the few) methods made available in controller classes is
@@ -98,23 +98,54 @@ created by +assume+ whenever a block is not passed. Here is a simple example:
       ...
     end
 
-This will provide the same behavior as the similar example above. In Rails,
-a helpful default is already made available. Please see +SimpleRails+ for
-a discussion.
+This will provide the same behavior as the similar example above. It is also
+possible to pass a proc or lambda directly.
 
-=== Supplying custome default behavior classes
+Finally, a symbol may be passed if it corresponds to a
+specifically-defined helper class that came packaged with the library or was
+provided by the application.
+
+=== In Rails
+
+In Rails, a useful default is already active out of the box. It attempts to
+guess the name of a class derived from ActiveRecord::Base and do a find on it
+based on an id available in the +params+ of the request. Because of this, the
+following two constructs would be equivalent in your controllers:
+
+    assume(:film) { Film.find(params[:film_id] || params[:id]) }
+    # The above line is exactly the same as:
+    assume(:film)
+
+Please see +SimpleRails+ for details of implementation. Because finding on :id
+could be considered dangerous, there is another default available for use,
++CautiousRails+, that will only find on :name_id. (In the example above,
+this would be :film_id.) Enable that for one of your controllers like so:
+
+    class FilmController < ActionController::Base
+      default_assumption :cautious_rails
+    end
+
+Default assumptions are inherited by derived classes.
+
+=== Supplying custom default behavior classes
 
 There is an ability to provide custom, modular default extensions to
-BasicAssumption. Please see the documentation for +DefaultAssumption+
-for a discussion and +SimpleRails+ for an example.
+BasicAssumption and then use them by passing a symbol, like so:
+
+    class WidgetController < ActionController::Base
+      default_assumption :my_custom_default_class
+    end
+
+The symbol is converted to a class in the same manner as Rails classify/
+constantize operates, but it is looked up in the
+BasicAssumption::DefaultAssumption namespace. Please see the documentation for
++DefaultAssumption+ for a discussion and +SimpleRails+ for an example of this.
 
 === Configuration
 
 There are a couple of simple configuration settings that can be set inside of
 a configuration block that can be used in places such as Rails initializer
 blocks. For more information, see +Configuration+.
-
-More are yet to come...
 
 == Issues
 

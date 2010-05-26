@@ -28,14 +28,10 @@ module BasicAssumption
   # provides a +block+ instance method, and use the result as the default
   # behavior. See the +SimpleRails+ class for an example.
   module DefaultAssumption
-    # Stores the +default+ as the default behavior for class +klass+ that
-    # will be used by calls to +assume+.
     def self.register(klass, default) #:nodoc:
       registry[klass.object_id] = strategy(default)
     end
 
-    # Returns the default behavior used by calls to +assume+ for the class
-    # +klass+.
     def self.resolve(klass) #:nodoc:
       while !registry.has_key?(klass.object_id)
         klass = klass.superclass
