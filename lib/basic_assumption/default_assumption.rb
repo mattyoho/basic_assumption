@@ -16,7 +16,7 @@ module BasicAssumption
   #
   # === Providing custom default classes
   #
-  # It is possible to pass a symbol (or string) instead of a block to the
+  # It is possible to pass a symbol instead of a block to the
   # +default_assumption+ call. BasicAssumption out of the box will understand
   # the symbol :simple_rails as an option passed to +default_assumption+,
   # and will use the block provided by an instance of
