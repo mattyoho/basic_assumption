@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
      "lib/basic_assumption/default_assumption/cautious_rails.rb",
      "lib/basic_assumption/default_assumption/class_resolver.rb",
      "lib/basic_assumption/default_assumption/rails.rb",
+     "lib/basic_assumption/default_assumption/restful_rails.rb",
      "lib/basic_assumption/default_assumption/simple_rails.rb",
      "lib/basic_assumption/rails.rb",
      "lib/basic_assumption/version.rb",
@@ -46,6 +47,7 @@ Gem::Specification.new do |s|
     "spec/lib/basic_assumption/default_assumption/base_spec.rb",
     "spec/lib/basic_assumption/default_assumption/cautious_rails_spec.rb",
     "spec/lib/basic_assumption/default_assumption/class_resolver_spec.rb",
+    "spec/lib/basic_assumption/default_assumption/restful_rails_spec.rb",
     "spec/lib/basic_assumption/default_assumption/simple_rails_spec.rb",
   ]
 
