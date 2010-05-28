@@ -164,6 +164,10 @@ this would be :film_id.) Enable that for one of your controllers like so:
       default_assumption :cautious_rails
     end
 
+Another option is :restful_rails, which attempts to provide appropriate
+behavior for the basic RESTful actions. Please see +RestfulRails+ for a
+description of how it works.
+
 Default assumptions are inherited by derived classes.
 
 === Supplying custom default behavior classes
