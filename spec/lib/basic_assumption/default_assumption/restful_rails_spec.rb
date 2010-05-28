@@ -12,6 +12,8 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
     end
   end
 
+  it { should be }
+
   context "#block" do
     let(:default) { BasicAssumption::DefaultAssumption::RestfulRails.new(:model, params) }
 

@@ -9,7 +9,7 @@ module BasicAssumption
                   :per_page,
                   :resource_attributes #:nodoc:
 
-      def initialize(name, params) #:nodoc:
+      def initialize(name = nil, params = {}) #:nodoc:
         @action    = params['action']
         @lookup_id = params['id']
         @name      = name.to_s
