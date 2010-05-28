@@ -21,7 +21,7 @@ module BasicAssumption
       end
 
       # Returns a block that will attempt to do the correct thing depending
-      # on which action the request it triggering. If the action is 'show',
+      # on which action the request is triggering. If the action is 'show',
       # 'edit', 'update', or 'destroy', then +assume+ will find an instance of
       # an ActiveRecord model based on the +name+ that it recieved and an id
       # value in the parameters. If the action is 'new' or 'create', +assume+
