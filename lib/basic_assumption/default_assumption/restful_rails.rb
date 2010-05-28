@@ -6,6 +6,7 @@ module BasicAssumption
                   :lookup_id,
                   :name,
                   :page,
+                  :params,
                   :per_page,
                   :resource_attributes #:nodoc:
 
@@ -13,6 +14,7 @@ module BasicAssumption
         @action    = params['action']
         @lookup_id = params['id']
         @name      = name.to_s
+        @params    = params
         @resource_attributes = params[singular_name]
 
         if @page = params['page']
@@ -84,8 +86,12 @@ module BasicAssumption
         action.eql?('index') && plural_name.eql?(name)
       end
 
+      def lookup?
+        params['id'].present?
+      end
+
       def make? #:nodoc:
-        %w(new create).include? action
+        %w(new create).include?(action) || !lookup?
       end
 
       def model_class #:nodoc:

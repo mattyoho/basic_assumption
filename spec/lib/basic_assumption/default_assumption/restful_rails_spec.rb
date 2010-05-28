@@ -140,9 +140,19 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
       end
       context "when the name given to assume is singular" do
         let(:name) { :model }
-        it "attempts to find a model instance based off the given name" do
-          Model.should_receive(:find).with(nil).and_return(:model)
-          default.block.call(:model).should eql(:model)
+        context "and there is an id in params" do
+          before { params['id'] = 1 }
+          it "attempts to find a model instance based off the given name" do
+            Model.should_receive(:find).with(1).and_return(:model)
+            default.block.call(name).should eql(:model)
+          end
+        end
+        context "and there is no id in params" do
+          before { params['model'] = :initializers }
+          it "creates a new model instance and passes in appropriate params" do
+            Model.should_receive(:new).with(:initializers).and_return(:model)
+            default.block.call(name).should eql(:model)
+          end
         end
       end
     end
