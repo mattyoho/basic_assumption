@@ -61,13 +61,14 @@ module BasicAssumption
   # +assume+ will also create an attribute writer method that will allow the
   # value returned by the instance method (the reader, from this point of view)
   # to be overriden.
-  def assume(name, &block)
+  def assume(name, strategy={}, &block)
     define_method(name) do
       @basic_assumptions       ||= {}
       @basic_assumptions[name] ||= if block_given?
         instance_eval(&block)
       else
-        block = DefaultAssumption.resolve(self.class)
+        which = strategy[:with] || self.class
+        block = DefaultAssumption.resolve(which)
         instance_exec(name, &block)
       end
     end

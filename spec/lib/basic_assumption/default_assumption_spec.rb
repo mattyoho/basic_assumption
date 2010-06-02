@@ -4,10 +4,19 @@ require 'lib/basic_assumption/default_assumption/simple_rails'
 describe BasicAssumption::DefaultAssumption do
   let(:mod) { BasicAssumption::DefaultAssumption }
   describe "::register and ::resolve" do
-    it "maps an object to a proc according to an internal strategy" do
+    before do
       mod.should_receive(:strategy).with(:behavior).and_return(:block)
-      mod.register(Class, :behavior)
-      mod.resolve(Class).should eql(:block)
+    end
+    context "when a class is passed to resolve" do
+      it "maps a class to a proc according to an internal strategy" do
+        mod.register(Class, :behavior)
+        mod.resolve(Class).should eql(:block)
+      end
+    end
+    context "when a symbol is passed to resolve" do
+      it "returns the strategy-determined proc for that symbol" do
+        mod.resolve(:behavior).should eql(:block)
+      end
     end
   end
   describe "::strategy" do

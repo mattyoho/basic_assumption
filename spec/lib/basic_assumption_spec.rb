@@ -41,6 +41,16 @@ describe BasicAssumption do
           extender_instance.by_default.should be_nil
         end
 
+        context "when a strategy is passed to #assume" do
+          it "looks up the strategy from the existing defaults to provide the behavior of the instance method" do
+            extender_class.class_eval do
+              assume :looked_up, :with => :strategy
+            end
+            BasicAssumption::DefaultAssumption.should_receive(:resolve).with(:strategy).and_return(Proc.new {})
+            extender_instance.looked_up
+          end
+        end
+
         context "when the default is overridden" do
           it "returns the result of the overriding block" do
             extender_class.class_eval do

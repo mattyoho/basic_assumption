@@ -33,6 +33,7 @@ module BasicAssumption
     end
 
     def self.resolve(klass) #:nodoc:
+      return strategy(klass) if klass.kind_of?(Symbol)
       while !registry.has_key?(klass.object_id)
         klass = klass.superclass
         break if klass.nil?
