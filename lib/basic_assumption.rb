@@ -57,6 +57,10 @@ module BasicAssumption
   #
   # In both cases, the result is memoized and returned directly for
   # subsequent calls.
+  #
+  # +assume+ will also create an attribute writer method that will allow the
+  # value returned by the instance method (the reader, from this point of view)
+  # to be overriden.
   def assume(name, &block)
     define_method(name) do
       @basic_assumptions       ||= {}
@@ -66,6 +70,10 @@ module BasicAssumption
         block = DefaultAssumption.resolve(self.class)
         instance_exec(name, &block)
       end
+    end
+    define_method("#{name}=") do |value|
+      @basic_assumptions       ||= {}
+      @basic_assumptions[name] = value
     end
     after_assumption(name)
   end

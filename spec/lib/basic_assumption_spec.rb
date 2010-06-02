@@ -91,6 +91,21 @@ describe BasicAssumption do
         extender_instance.random_once.should eql(extender_instance.random_once)
       end
     end
+
+    context "#assume creates an attribute writer" do
+      before do
+        extender_class.class_eval do
+          assume(:writeable) { 'written' }
+        end
+      end
+      it "declares an attribute writer method of the given name" do
+        expect { extender_instance.writeable = 'overwritten' }.to_not raise_error
+      end
+      it "overrides the value returned by the created instance method" do
+        extender_instance.writeable = 'overwritten'
+        extender_instance.writeable.should eql('overwritten')
+      end
+    end
   end
 
   context "within Rails" do
