@@ -1,8 +1,13 @@
 == BasicAssumption
 
-A clone of DecentExposure with a psuedo-modular interface for providing
-custom defaults. It provides a declarative interface for specifying helper
-methods that is useful in Rails applications.
+BasicAssumption is a gem meant to let you declare resources inside of a class
+in a concise manner. It is targetted at making Rails controllers and views
+cleaner.
+
+It creates a declarative interface for specifying helper methods that is useful
+in Rails applications. It is a clone of DecentExposure that adds a
+psuedo-modular interface for providing custom defaults and some useful defaults
+out of the box.
 
 === What is DecentExposure?
 
@@ -10,12 +15,10 @@ It's a plugin written by {Stephen Caudill}[http://voxdolo.me/] that provides a w
 cleaning up Rails controller and view code. Find it at
 {its GitHub repository}[http://github.com/voxdolo/decent_exposure].
 
-It represents an idiom for writing certain kinds of code in a declarative way.
-Particularly in your Rails apps, it's worth checking out. BasicAssumption is
-another implementation of the idiom. It exists largely because I felt like
-practicing writing a gem, though it does have a differentiating feature or two.
-Check the BasicAssumption::Configuration options for enabling compatibility
-with the DecentExposure API.
+It coins an idiom for writing certain kinds of code in a declarative way.
+Particularly for your Rails apps, it's worth checking out. BasicAssumption is
+another implementation of the idiom.  Check the BasicAssumption::Configuration
+options for enabling compatibility with the DecentExposure API.
 
 == Install BasicAssumption
 
@@ -118,31 +121,57 @@ would become this:
 and would have the added benefit of not tossing instance variables around.
 If a controller has protected or hidden methods that find or create instance
 variables used in actions and/or views, it might be cleaner to use an
-assumption instead.
+assumption instead. This:
+
+    class CompanyController < ActionController::Base
+
+      def show
+        @company = Company.find(params[:company_id])
+      end
+
+      def unique_groups
+        @unique_groups = Group.unique_groups(@company)
+      end
+      helper_method :unique_groups
+      hide_action   :unique_groups
+
+    end
+
+could instead be written as:
+
+    class CompanyController < ActionController::Base
+
+      assume :company
+      assume(:unique_groups) { Group.unique_groups(company) }
+
+    end
 
 BasicAssumption allows for a simple, declarative, and very lightweight approach
-to RESTful controllers.  It also can make for a cleaner, more testable interface
-for controller or view testing. There may even be uses outside of Rails apps.
-Give it a shot.
+to RESTful controllers.  It also tends to make for a cleaner, more testable
+interface for controller or view testing. There may even be uses outside of
+Rails apps. Give it a shot.
 
 === Defaults
 
 BasicAssumption allows for default behavior to be associated with methods
 created by +assume+ whenever a block is not passed. Here is a simple example:
 
-    class WidgetController < ActionController::Base
-      default_assumption { Widget.find(params[:id]) }
-      assume(:widget)
+    class MariosController < ActionController::Base
+      default_assumption { "It's a me, Mario!" }
+      assume :mario
 
       ...
     end
 
-This will provide the same behavior as the similar example above. It is also
-possible to pass a proc or lambda directly.
+    MariosController.new.mario    #=> 'It's a me, Mario!'
 
-Finally, a symbol may be passed if it corresponds to a
-specifically-defined helper class that came packaged with the library or was
-provided by the application.
+In this case, any calls to +assume+ that don't provide a block with create
+methods that return the string "It's a me, Mario!".
+
+In addition to passing a default block, a symbol may be passed if it corresponds
+to a specifically-defined helper class that came packaged with the
+BasicAssumption library or was provided by the application as a custom default.
+See below for more information on providing custom defaults.
 
 === In Rails
 
@@ -188,7 +217,9 @@ BasicAssumption::DefaultAssumption namespace. Please see the documentation for
 
 There are a couple of simple configuration settings that can be set inside of
 a configuration block that can be used in places such as Rails initializer
-blocks. For more information, see BasicAssumption::Configuration.
+blocks. +emulate_exposure!+ will alias +assume+ and +default_assumption+ to
++expose+ and +default_exposure+, respectively. You can also set the app-wide
+default behavior. For more information, see BasicAssumption::Configuration.
 
 == Issues
 
