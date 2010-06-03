@@ -4,10 +4,8 @@ BasicAssumption is a gem meant to let you declare resources inside of a class
 in a concise manner. It is targetted at making Rails controllers and views
 cleaner.
 
-It creates a declarative interface for specifying helper methods that is useful
-in Rails applications. It is a clone of DecentExposure that adds a
-psuedo-modular interface for providing custom defaults and some useful defaults
-out of the box.
+It is a clone of DecentExposure that adds a psuedo-modular interface for
+providing custom defaults and some useful defaults out of the box.
 
 === What is DecentExposure?
 
@@ -15,9 +13,9 @@ It's a plugin written by {Stephen Caudill}[http://voxdolo.me/] that provides a w
 cleaning up Rails controller and view code. Find it at
 {its GitHub repository}[http://github.com/voxdolo/decent_exposure].
 
-It coins an idiom for writing certain kinds of code in a declarative way.
-Particularly for your Rails apps, it's worth checking out. BasicAssumption is
-another implementation of the idiom.  Check the BasicAssumption::Configuration
+DecentExposure coins an idiom for writing certain kinds of code in a declarative
+way. Particularly for your Rails apps, it's worth checking out. BasicAssumption
+is another implementation of the idiom. Check the BasicAssumption::Configuration
 options for enabling compatibility with the DecentExposure API.
 
 == Install BasicAssumption
@@ -88,7 +86,38 @@ And then inside of the 'widgets/purchase_complete.html.haml' view:
 
 By calling +assume+ with the symbol :widget and passing it a block, an instance
 method is created on the controller class that is also exposed as a helper
-inside views. For more details on how BasicAssumption is wired into your Rails
+inside views.
+
+==== Special cases in controllers
+
+A named resource created with +assume+ may be used in multiple controller
+actions, or the same view template or partial referencing the named
+resource may be rendered by more than one action. There will be times when
+the behavior given to +assume+ is correct for most cases save one or two. It is
+possible to override to override the value of the resource method in particular
+actions to accommodate the exceptional cases more easily. For example:
+
+    class WidgetController < ActionController::Base
+      assume :widget
+
+      def show
+      end
+
+      def show_mine
+        self.widget = current_user.widgets.find(params[:widget_id])
+        render :action => 'show'
+      end
+
+      def destroy
+        widget.destroy if widget.owned_by? current_user
+      end
+    end
+
+In this case, the +show_mine+ action overrides the value of widget so that it
+may reuse the view template for the regular +show+ action. Overriding the
+assumed resource should be the exception, not the rule.
+
+For more details on how BasicAssumption is wired into your Rails
 app, please see the BasicAssumption::Railtie documentation.
 
 === When to use it
