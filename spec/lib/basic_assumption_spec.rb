@@ -44,7 +44,7 @@ describe BasicAssumption do
         context "when a strategy is passed to #assume" do
           it "looks up the strategy from the existing defaults to provide the behavior of the instance method" do
             extender_class.class_eval do
-              assume :looked_up, :with => :strategy
+              assume :looked_up, :using => :strategy
             end
             BasicAssumption::DefaultAssumption.should_receive(:resolve).with(:strategy).and_return(Proc.new {})
             extender_instance.looked_up

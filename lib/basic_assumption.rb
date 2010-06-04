@@ -67,7 +67,7 @@ module BasicAssumption
       @basic_assumptions[name] ||= if block_given?
         instance_eval(&block)
       else
-        which = strategy[:with] || self.class
+        which = strategy[:using] || self.class
         block = DefaultAssumption.resolve(which)
         instance_exec(name, &block)
       end

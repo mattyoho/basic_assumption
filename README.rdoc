@@ -202,6 +202,11 @@ to a specifically-defined helper class that came packaged with the
 BasicAssumption library or was provided by the application as a custom default.
 See below for more information on providing custom defaults.
 
+Specifying a built-in or application-defined default can be done on +assume+
+calls as well.
+
+    assume :luigi, :using => :luigi_strategy
+
 === In Rails
 
 In Rails, a useful default is already active out of the box. It attempts to
