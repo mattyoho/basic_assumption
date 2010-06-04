@@ -4,7 +4,7 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
   module BasicAssumption
     # Must be required explicitly in Rails 3. Extends ActionController::Base
     # with BasicAssumption, sets the default assumption behavior to be the
-    # :simple_rails behavior, and sets up an +after_assumption+ hook.
+    # :rails behavior, and sets up an +after_assumption+ hook.
     class Railtie < Rails::Railtie
 
       initializer "basic_assumption.set_up_action_controller_base" do |app|
@@ -21,7 +21,7 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
         end
 
         BasicAssumption::Configuration.configure do |config|
-          config.default_assumption = :simple_rails
+          config.default_assumption = :rails
         end
       end
     end

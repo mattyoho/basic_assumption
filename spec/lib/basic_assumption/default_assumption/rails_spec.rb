@@ -1,12 +1,12 @@
 require 'spec_helper'
 require 'active_support'
-require 'basic_assumption/default_assumption/simple_rails'
+require 'basic_assumption/default_assumption/rails'
 
-describe BasicAssumption::DefaultAssumption::SimpleRails do
+describe BasicAssumption::DefaultAssumption::Rails do
   class Model; end
 
   context "#block" do
-    let(:default) { BasicAssumption::DefaultAssumption::SimpleRails.new }
+    let(:default) { BasicAssumption::DefaultAssumption::Rails.new }
     let(:params)  { stub(:[] => 42) }
 
     before(:each) do

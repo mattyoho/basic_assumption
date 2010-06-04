@@ -11,5 +11,5 @@ ActionController::Base.class_eval do
 end
 
 BasicAssumption::Configuration.configure do |config|
-  config.default_assumption = :simple_rails
+  config.default_assumption = :rails
 end

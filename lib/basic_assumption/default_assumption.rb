@@ -18,15 +18,15 @@ module BasicAssumption
   #
   # It is possible to pass a symbol instead of a block to the
   # +default_assumption+ call. BasicAssumption out of the box will understand
-  # the symbol :simple_rails as an option passed to +default_assumption+,
+  # the symbol :rails as an option passed to +default_assumption+,
   # and will use the block provided by an instance of
-  # BasicAssumption::DefaultAssumption::SimpleRails as the default behavior.
+  # BasicAssumption::DefaultAssumption::Rails as the default behavior.
   #
   # BasicAssumption will use the same process for any symbol passed to
   # +default_assumption+. If you pass it :my_custom_default it will attempt
   # to find a class BasicAssumption::DefaultAssumption::MyCustomDefault that
   # provides a +block+ instance method, and use the result as the default
-  # behavior. See the +SimpleRails+ class for an example.
+  # behavior. See the +Rails+ class for an example.
   module DefaultAssumption
     def self.register(klass, default) #:nodoc:
       registry[klass.object_id] = strategy(default)

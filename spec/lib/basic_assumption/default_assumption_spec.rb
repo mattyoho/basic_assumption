@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'lib/basic_assumption/default_assumption/simple_rails'
+require 'lib/basic_assumption/default_assumption/rails'
 
 describe BasicAssumption::DefaultAssumption do
   let(:mod) { BasicAssumption::DefaultAssumption }
@@ -25,8 +25,8 @@ describe BasicAssumption::DefaultAssumption do
       mod.send(:strategy, a_proc).call.should eql(:block)
     end
     it "returns the block of a class in the BasicAssumption::DefaultAssumption namespace when given a symbol" do
-      mod::SimpleRails.should_receive(:new).and_return(stub(:block => :block))
-      mod.send(:strategy, :simple_rails).should eql(:block)
+      mod::Rails.should_receive(:new).and_return(stub(:block => :block))
+      mod.send(:strategy, :rails).should eql(:block)
     end
     it "returns the block of a Base instance otherwise" do
       mod.send(:strategy, nil).call.should be_nil

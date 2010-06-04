@@ -213,7 +213,7 @@ following two constructs would be equivalent in your controllers:
     # The above line is exactly the same as:
     assume(:film)
 
-Please see +SimpleRails+ for implementation details . Because finding on :id
+Please see +Rails+ for implementation details . Because finding on :id
 could be considered dangerous, there is another default available for use,
 +CautiousRails+, that will only find on :name_id. (In the example above,
 this would be :film_id.) Enable that for one of your controllers like so:
@@ -240,7 +240,7 @@ BasicAssumption and then use them by passing a symbol, as in the following:
 The symbol is converted to a class in the same manner as Rails classify/
 constantize operates, but it is looked up in the
 BasicAssumption::DefaultAssumption namespace. Please see the documentation for
-+DefaultAssumption+ for a discussion and +SimpleRails+ for an example of this.
++DefaultAssumption+ for a discussion and +Rails+ for an example of this.
 
 == Configuration
 
