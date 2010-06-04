@@ -1,20 +1,17 @@
+require 'basic_assumption/default_assumption/rails'
+
 module BasicAssumption
   module DefaultAssumption
     # Restful default behavior in the context of Rails
-    class RestfulRails < BasicAssumption::DefaultAssumption::Base
+    class RestfulRails < BasicAssumption::DefaultAssumption::Rails
       attr_reader :action,
-                  :lookup_id,
-                  :name,
                   :page,
-                  :params,
                   :per_page,
                   :resource_attributes #:nodoc:
 
       def initialize(name = nil, params = {}) #:nodoc:
+        super
         @action    = params['action']
-        @lookup_id = params['id']
-        @name      = name.to_s
-        @params    = params
         @resource_attributes = params[singular_name]
 
         if @page = params['page']
@@ -52,10 +49,7 @@ module BasicAssumption
       # results, also observing a +per_page+ value in the +params+ hash or
       # defaulting to 15 if one is not found.
       def block
-        klass = self.class
-        Proc.new do |name|
-          klass.new(name, params).result
-        end
+        super
       end
 
       def result #:nodoc:
@@ -86,16 +80,16 @@ module BasicAssumption
         action.eql?('index') && plural_name.eql?(name)
       end
 
-      def lookup?
-        params['id'].present?
+      def lookup_id #:nodoc:
+        params['id']
+      end
+
+      def lookup? #:nodoc:
+        lookup_id.present?
       end
 
       def make? #:nodoc:
         %w(new create).include?(action) || !lookup?
-      end
-
-      def model_class #:nodoc:
-        @model_class ||= name.classify.constantize
       end
 
       def page? #:nodoc:
