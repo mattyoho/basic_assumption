@@ -85,7 +85,7 @@ And then inside of the 'widgets/purchase_complete.html.haml' view:
           %td= widget.manufacturer
 
 By calling +assume+ with the symbol :widget and passing it a block, an instance
-method is created on the controller class that is also exposed as a helper
+method +widget+ is created on the controller that is also exposed as a helper
 inside views.
 
 ==== Special cases in controllers
@@ -234,17 +234,52 @@ There is an ability to provide custom, modular default extensions to
 BasicAssumption and then use them by passing a symbol, as in the following:
 
     class WidgetController < ActionController::Base
-      default_assumption :my_custom_default_class
+      default_assumption :my_custom_rails_default
     end
 
-The symbol is converted to a class in the same manner as Rails classify/
-constantize operates, but it is looked up in the
-BasicAssumption::DefaultAssumption namespace. Please see the documentation for
-+DefaultAssumption+ for a discussion and +Rails+ for an example of this.
+The symbol is converted to a class in the same manner as Rails
+classify/constantize operates, but it is looked up in the
+BasicAssumption::DefaultAssumption namespace. The following code implements the
+custom default specified in the preceding example. It reimplements the behavior
+that is active by default within Rails.
+
+    module BasicAssumption
+      module DefaultAssumption
+        class MyCustomRailsDefault
+
+          def initialize(name=nil, params={})
+            @name   = name.to_s
+            @lookup = params['id']
+          end
+
+          def block
+            klass = self.class
+            Proc.new do |name|
+              klass.new(name, params).result
+            end
+          end
+
+          def result
+            model_class.find(@lookup)
+          end
+
+          # Rely on ActiveSupport methods
+          def model_class
+            name.classify.constantize
+          end
+        end
+      end
+    end
+
+The only method that BasicAssumption depends on in the interface of custom
+default classes is the +block+ method. Note the hoops that have to be jumped
+through inside the implementation of +block+ in this example. Keep in mind the
+implications of evaluating the +Proc+ returned by +block+ using +instance_eval+
+(or +instance_exec+).
 
 == Configuration
 
-There are a couple of simple configuration settings that can be set inside of
+There are a couple of configuration settings that can be set inside of
 a configuration block that can be used in places such as Rails initializer
 blocks. #emulate_exposure! will alias +assume+ and +default_assumption+ to
 +expose+ and +default_exposure+, respectively. You can also set the app-wide
@@ -278,14 +313,14 @@ manager. For example, if that's RubyGems:
 
 If you're unfamiliar with why this is being done, take a look
 {here for a start}[http://tomayko.com/writings/require-rubygems-antipattern].
-Other than that, please feel free to fork and send back pull requests! Thanks.
+Other than that, fork away and send back pull requests! Thanks.
 
 == But should I use it?
 
 Sure! Absolutely. I think it's a cool idea that lets you cut down on line
 noise, particularly in your Rails controllers. You may want to consider going
 with {DecentExposure}[http://github.com/voxdolo/decent_exposure] instead, simply
-because it's used by much of {Hashrocket}[http://www.hashrocket.com/]
+because it's used by much of {Hashrocket}[http://www.hashrocket.com/].
 But so far as I know, BasicAssumption is pretty solid. Feel free to let me know
 if you use it! Email mby [at] mattyoho [dot] com with questions, comments, or
 non-sequiters.
