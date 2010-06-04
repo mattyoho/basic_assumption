@@ -93,9 +93,9 @@ inside views.
 A named resource created with +assume+ may be used in multiple controller
 actions, or the same view template or partial referencing the named
 resource may be rendered by more than one action. There will be times when
-the behavior given to +assume+ is correct for most cases save one or two. It is
-possible to override to override the value of the resource method in particular
-actions to accommodate the exceptional cases more easily. For example:
+the behavior given to +assume+ is correct for most cases save one or two. It's
+possible to override the value of the resource method within a particular
+action to accommodate an exceptional case more easily. For example:
 
     class WidgetController < ActionController::Base
       assume :widget
@@ -147,7 +147,7 @@ would become this:
       assume :record
     end
 
-and would have the added benefit of not tossing instance variables around.
+and would provide the added benefit of not tossing instance variables around.
 If a controller has protected or hidden methods that find or create instance
 variables used in actions and/or views, it might be cleaner to use an
 assumption instead. This:
@@ -180,7 +180,7 @@ to RESTful controllers.  It also tends to make for a cleaner, more testable
 interface for controller or view testing. There may even be uses outside of
 Rails apps. Give it a shot.
 
-=== Defaults
+== Defaults
 
 BasicAssumption allows for default behavior to be associated with methods
 created by +assume+ whenever a block is not passed. Here is a simple example:
@@ -194,7 +194,7 @@ created by +assume+ whenever a block is not passed. Here is a simple example:
 
     MariosController.new.mario    #=> 'It's a me, Mario!'
 
-In this case, any calls to +assume+ that don't provide a block with create
+In this case, any calls to +assume+ that don't provide a block will create
 methods that return the string "It's a me, Mario!".
 
 In addition to passing a default block, a symbol may be passed if it corresponds
@@ -205,15 +205,15 @@ See below for more information on providing custom defaults.
 === In Rails
 
 In Rails, a useful default is already active out of the box. It attempts to
-guess the name of a class derived from ActiveRecord::Base and do a find on it
-based on an id available in the +params+ of the request. Because of this, the
+guess the name of a class derived from ActiveRecord::Base and perform a find on
+it based on an id available in the +params+ of the request. Because of this, the
 following two constructs would be equivalent in your controllers:
 
     assume(:film) { Film.find(params[:film_id] || params[:id]) }
     # The above line is exactly the same as:
     assume(:film)
 
-Please see +SimpleRails+ for details of implementation. Because finding on :id
+Please see +SimpleRails+ for implementation details . Because finding on :id
 could be considered dangerous, there is another default available for use,
 +CautiousRails+, that will only find on :name_id. (In the example above,
 this would be :film_id.) Enable that for one of your controllers like so:
@@ -228,7 +228,7 @@ description of how it works.
 
 Default assumptions are inherited by derived classes.
 
-=== Supplying custom default behavior classes
+== Supplying custom default behavior classes
 
 There is an ability to provide custom, modular default extensions to
 BasicAssumption and then use them by passing a symbol, as in the following:
@@ -242,15 +242,15 @@ constantize operates, but it is looked up in the
 BasicAssumption::DefaultAssumption namespace. Please see the documentation for
 +DefaultAssumption+ for a discussion and +SimpleRails+ for an example of this.
 
-=== Configuration
+== Configuration
 
 There are a couple of simple configuration settings that can be set inside of
 a configuration block that can be used in places such as Rails initializer
-blocks. +emulate_exposure!+ will alias +assume+ and +default_assumption+ to
+blocks. #emulate_exposure! will alias +assume+ and +default_assumption+ to
 +expose+ and +default_exposure+, respectively. You can also set the app-wide
 default behavior. For more information, see BasicAssumption::Configuration.
 
-== Issues
+== Issues to note
 
 === Memoization
 
@@ -268,16 +268,11 @@ be observed.
 Using BasicAssumption may change the exception handling strategy inside your
 classes. In Rails, the +rescue_from+ method may be useful.
 
-=== Other
-
-There are probably others, and when I remember what they were, I'll write them
-up.
-
 == Hacking/running specs
 
 There is nothing special about running the specs, aside from ensuring the
 RUBYOPT environment variable is set to your preferred Ruby dependency
-manager. For example, if RubyGems:
+manager. For example, if that's RubyGems:
 
     export RUBYOPT=rubygems
 
@@ -289,9 +284,8 @@ Other than that, please feel free to fork and send back pull requests! Thanks.
 
 Sure! Absolutely. I think it's a cool idea that lets you cut down on line
 noise, particularly in your Rails controllers. You may want to consider going
-with {DecentExposure}[http://github.com/voxdolo/decent_exposure], simply
+with {DecentExposure}[http://github.com/voxdolo/decent_exposure] instead, simply
 because it's used by much of {Hashrocket}[http://www.hashrocket.com/]
-and BasicAssumption is used, so far as I know, only by me. But so far as I know
-BasicAssumption is pretty solid, and I'm happy to accept bug fixes and field
-feature requests. If you use it, feel free to let me know! Email mby [at]
-mattyoho [dot] com with questions, comments, or non-sequiters.
+But so far as I know, BasicAssumption is pretty solid. Feel free to let me know
+if you use it! Email mby [at] mattyoho [dot] com with questions, comments, or
+non-sequiters.
