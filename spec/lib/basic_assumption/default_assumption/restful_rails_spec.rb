@@ -157,4 +157,55 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
       end
     end
   end
+
+  context "#make?" do
+    let(:rr) { BasicAssumption::DefaultAssumption::RestfulRails.new }
+    subject { rr.send(:make?) }
+    before { rr.stub(:list? => false, :lookup? => false) }
+    context "when the action is not new or create" do
+      context "when #list? is true" do
+        before { rr.stub(:list? => true) }
+        context "when #lookup? is true" do
+          before { rr.stub(:lookup? => true) }
+          it { should be_false }
+        end
+        context "when #lookup? is false" do
+          it { should be_false }
+        end
+      end
+      context "when #list? is false" do
+        context "when #lookup? is true" do
+          before { rr.stub(:lookup? => true) }
+          it { should be_false }
+        end
+        context "when #lookup? is false" do
+          it { should be_true }
+        end
+      end
+    end
+    %w(new create).each do |action|
+      context "when the action is #{action}" do
+        before { rr.stub(:action => action) }
+        context "when #list? is true" do
+          before { rr.stub(:list? => true) }
+          context "when #lookup? is true" do
+            before { rr.stub(:lookup? => true) }
+            it { should be_true }
+          end
+          context "when #lookup? is false" do
+            it { should be_true }
+          end
+        end
+        context "when #list? is false" do
+          context "when #lookup? is true" do
+            before { rr.stub(:lookup? => true) }
+            it { should be_true }
+          end
+          context "when #lookup? is false" do
+            it { should be_true }
+          end
+        end
+      end
+    end
+  end
 end

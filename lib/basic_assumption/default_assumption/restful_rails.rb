@@ -89,7 +89,7 @@ module BasicAssumption
       end
 
       def make? #:nodoc:
-        %w(new create).include?(action) || !lookup?
+        %w(new create).include?(action) || !(lookup? || list?)
       end
 
       def page? #:nodoc:
