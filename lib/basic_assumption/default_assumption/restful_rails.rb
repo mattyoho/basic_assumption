@@ -20,13 +20,14 @@ module BasicAssumption
       end
 
       # Returns a block that will attempt to do the correct thing depending
-      # on which action the request is triggering. If the action is 'show',
-      # 'edit', 'update', or 'destroy', then +assume+ will find an instance of
-      # an ActiveRecord model based on the +name+ that it recieved and an id
+      # on the plurality of the name passed to +assume+ and the action for the
+      # current request. If the name is singular and the action is not 'new'
+      # or 'create', then +assume+ will find an instance of
+      # an ActiveRecord model of the name that it received and an id
       # value in the parameters. If the action is 'new' or 'create', +assume+
       # will instantiate a new instance of the model class, passing in the
-      # values it finds in the +params+ hash with a key of the singularized
-      # form of the +name+ passed to +assume+. For example:
+      # values it finds in the +params+ hash with for a key of the name passed
+      # to +assume+. For example:
       #
       #    class WidgetController < ApplicationController
       #      default_assumption :restful_rails
@@ -38,16 +39,15 @@ module BasicAssumption
       #    end
       #
       # Note the object will have been instantiated but not saved, destroyed,
-      # etc. If the action is 'index', there are two possibilities for the
-      # behavior of +assume+. If the +name+ passed is of singular form, then
-      # a find will be performed, just as for a show or edit action. If the
-      # +name+ is a plural word, then +assume+ will find all instances of
-      # the model class.
+      # etc.
       #
-      # However, if the model responds to +paginate+ and there is a +page+
-      # key in the +params+ hash, +assume+ will attempt to paginate the
-      # results, also observing a +per_page+ value in the +params+ hash or
-      # defaulting to 15 if one is not found.
+      # If the name passed to assume is plural, there are two possibilities
+      # for the # behavior of +assume+. If the model responds to +paginate+ and
+      # there is a +page+ key in the +params+ hash, +assume+ will attempt to
+      # find all records of the model type paginated based on the +page+
+      # value in params and also a +per_page+ value. 15 will be the default
+      # if +per_page+ is not present. Otherwise, it returns all # records for
+      # the model.
       def block
         super
       end
@@ -57,16 +57,12 @@ module BasicAssumption
           list
         elsif make?
           model_class.new(resource_attributes)
-        else
+        elsif lookup?
           model_class.find(lookup_id)
         end
       end
 
       protected
-
-      def find? #:nodoc:
-        %w(show edit update destroy).include? action
-      end
 
       def list #:nodoc:
         if page?
@@ -77,7 +73,7 @@ module BasicAssumption
       end
 
       def list? #:nodoc:
-        action.eql?('index') && plural_name.eql?(name)
+       plural_name.eql?(name)
       end
 
       def lookup_id #:nodoc:
@@ -85,7 +81,7 @@ module BasicAssumption
       end
 
       def lookup? #:nodoc:
-        lookup_id.present?
+        lookup_id.present? && !list?
       end
 
       def make? #:nodoc:
