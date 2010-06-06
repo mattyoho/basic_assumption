@@ -9,9 +9,10 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Matt Yoho"]
-  s.date = %q{2010-06-04}
+  s.date = %q{2010-06-05}
   s.description = %q{
     Allows a simple declarative idiom for accessing resources in controllers and views
+    via a well-defined interface that increases testability and reduces shared state.
     }
   s.email = %q{mby@mattyoho.com}
   s.extra_rdoc_files = [
