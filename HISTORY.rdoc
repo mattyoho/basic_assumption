@@ -1,3 +1,6 @@
+== 0.3.10 / 2010-06-06
+  * License
+    * Rename LICENSE to MIT-LICENSE; terms remain the same
 == 0.3.9 / 2010-06-05
   * Feature Change
     * RestfulRails works first based on the plurality of the name passed to assume and then the presence of id in params
