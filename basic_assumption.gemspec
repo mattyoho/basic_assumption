@@ -16,10 +16,12 @@ Gem::Specification.new do |s|
     }
   s.email = %q{mby@mattyoho.com}
   s.extra_rdoc_files = [
+    "HISTORY.rdoc",
     "LICENSE",
     "README.rdoc"
   ]
   s.files = [
+     "HISTORY.rdoc",
      "LICENSE",
      "README.rdoc",
      "lib/basic_assumption.rb",
