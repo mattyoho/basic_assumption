@@ -29,7 +29,7 @@ describe BasicAssumption::DefaultAssumption do
       mod.send(:strategy, :rails).should eql(:block)
     end
     it "returns the block of a Base instance otherwise" do
-      mod.send(:strategy, nil).call.should be_nil
+      mod.send(:strategy, nil).call(:foo).should be_nil
     end
   end
   describe "::registry" do
