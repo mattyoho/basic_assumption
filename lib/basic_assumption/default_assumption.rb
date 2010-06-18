@@ -35,7 +35,7 @@ module BasicAssumption
     def self.resolve(klass) #:nodoc:
       return strategy(klass) if klass.kind_of?(Symbol)
       while !registry.has_key?(klass.object_id)
-        klass = klass.superclass
+        klass = superclass(klass)
         break if klass.nil?
       end
       registry[klass.object_id]
@@ -58,6 +58,12 @@ module BasicAssumption
         else
           Base.new.block
         end
+      end
+
+      private
+
+      def superclass(klass)
+        klass.ancestors[1]
       end
     end
   end
