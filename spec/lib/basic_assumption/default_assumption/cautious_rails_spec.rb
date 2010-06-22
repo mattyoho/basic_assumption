@@ -2,8 +2,9 @@ require 'spec_helper'
 require 'active_support'
 require 'basic_assumption/default_assumption/cautious_rails'
 
+class Model; end
+
 describe BasicAssumption::DefaultAssumption::CautiousRails do
-  class Model; end
 
   context "#block" do
     let(:default) { BasicAssumption::DefaultAssumption::CautiousRails.new }

@@ -2,15 +2,16 @@ require 'spec_helper'
 require 'active_support'
 require 'basic_assumption/default_assumption/restful_rails'
 
-describe BasicAssumption::DefaultAssumption::RestfulRails do
-  class Model
-    attr_accessor :age, :color
-    def initialize(hash = {})
-      hash.each do |k, v|
-        self.send("#{k}=", v)
-      end
+class Model
+  attr_accessor :age, :color
+  def initialize(hash = {})
+    hash.each do |k, v|
+      self.send("#{k}=", v)
     end
   end
+end
+
+describe BasicAssumption::DefaultAssumption::RestfulRails do
 
   context "#block" do
     let(:default) { BasicAssumption::DefaultAssumption::RestfulRails.new(:model, params) }
