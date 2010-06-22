@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'lib/basic_assumption/default_assumption/rails'
+require 'basic_assumption/default_assumption/rails'
 
 describe BasicAssumption::DefaultAssumption do
   let(:mod) { BasicAssumption::DefaultAssumption }

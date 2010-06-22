@@ -120,7 +120,7 @@ describe BasicAssumption do
 
   context "within Rails" do
     before(:all) do
-      require 'rails/init.rb'
+      require File.expand_path(File.dirname(__FILE__) + '/../../rails/init.rb')
     end
     let(:controller_class) { Class.new(::ActionController::Base) }
     let(:controller_instance) { controller_class.new }
