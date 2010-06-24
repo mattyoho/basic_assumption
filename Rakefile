@@ -35,6 +35,11 @@ end
 namespace :clobber do
   desc 'Remove generated Rails app'
   task :app do
-    rm_rf './tmp'
+    rm_rf './tmp/example_app'
   end
+end
+
+desc 'Remove generated code'
+task :clobber do
+  rm_rf './tmp'
 end
