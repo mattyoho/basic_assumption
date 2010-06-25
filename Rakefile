@@ -1,4 +1,5 @@
 require 'spec/rake/spectask'
+require 'cucumber/rake/task'
 
 task :default => :spec
 
@@ -6,6 +7,10 @@ desc "Run specs"
 Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
   t.spec_opts = %w(-fs --color)
+end
+
+Cucumber::Rake::Task.new(:cucumber) do |t|
+  t.cucumber_opts = %w{--format progress}
 end
 
 desc "Run specs with rcov"
@@ -26,8 +31,17 @@ namespace :generate do
         system 'rails ./tmp/example_app'
         Dir.chdir("./tmp/example_app/") do
           system "script/generate cucumber"
+          system 'cp ../../templates/environment.rb  ./config/'
+          system 'cp ../../templates/custom_steps.rb ./features/step_definitions/'
         end
       end
+    end
+  end
+
+  desc 'Generate scaffolds, etc'
+  task :custom => ['generate:app'] do
+    Dir.chdir("./tmp/example_app/") do
+      system "rake rails:template LOCATION='../../templates/generate_custom.rb'"
     end
   end
 end
