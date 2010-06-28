@@ -14,8 +14,8 @@ module BasicAssumption
         @action    = params['action']
         @resource_attributes = params[singular_name]
 
-        if @page = params['page']
-          @per_page = params['per_page'] || '15'
+        if @page = params[:page]
+          @per_page = params[:per_page]
         end
       end
 
@@ -45,9 +45,8 @@ module BasicAssumption
       # for the # behavior of +assume+. If the model responds to +paginate+ and
       # there is a +page+ key in the +params+ hash, +assume+ will attempt to
       # find all records of the model type paginated based on the +page+
-      # value in params and also a +per_page+ value. 15 will be the default
-      # if +per_page+ is not present. Otherwise, it returns all # records for
-      # the model.
+      # value in params and also a +per_page+ value. Otherwise, it returns all
+      # # records for the model.
       def block
         super
       end
@@ -66,7 +65,7 @@ module BasicAssumption
 
       def list #:nodoc:
         if page?
-          model_class.paginate('page' => page, 'per_page' => per_page)
+          model_class.paginate(:page => page, :per_page => per_page)
         else
           model_class.all
         end

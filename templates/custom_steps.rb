@@ -28,3 +28,6 @@ When /^I view all widgets and there is an id in params$/ do
   visit widgets_path(:id => @widget.id)
 end
 
+When /^I view page (\d+) of all widgets(?: with (\d+) per page)?$/ do |page, per_page|
+  visit widgets_path(:page => page, :per_page => per_page)
+end

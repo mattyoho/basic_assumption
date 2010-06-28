@@ -32,13 +32,13 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
             before { params['id'] = 123 }
             context "when action is #{action}" do
               before { Model.should_receive(:all) }
-              context "when 'page' exists in the request params" do
-                before { params['page'] = '5' }
+              context "when :page exists in the request params" do
+                before { params[:page] = '5' }
                 it "finds all the records of the model class" do
                   default.block.call(name)
                 end
               end
-              context "when 'page' does not exist in the request params" do
+              context "when :page does not exist in the request params" do
                 it "finds all the records of the model class" do
                   default.block.call(name)
                 end
@@ -49,13 +49,13 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
           context "when there is not an id in the params" do
             context "when action is #{action}" do
               before { Model.should_receive(:all) }
-              context "when 'page' exists in the request params" do
-                before { params['page'] = '5' }
+              context "when :page exists in the request params" do
+                before { params[:page] = '5' }
                 it "finds all the records of the model class" do
                   default.block.call(name)
                 end
               end
-              context "when 'page' does not exist in the request params" do
+              context "when :page does not exist in the request params" do
                 it "finds all the records of the model class" do
                   default.block.call(name)
                 end
@@ -73,27 +73,27 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
             before { params['id'] = 123 }
             context "when action is #{action}" do
               before { Model.stub! :paginate }
-              context "when 'page' exists in the request params" do
-                before { params['page'] = '5' }
+              context "when :page exists in the request params" do
+                before { params[:page] = '5' }
                 it "paginates the records of the model class" do
                   Model.should_receive(:paginate)
                   default.block.call(name)
                 end
-                context "when 'per_page' exists in the request params" do
-                  it "paginates using 'page' and 'per_page' from the params" do
-                    params['per_page'] = '10'
-                    Model.should_receive(:paginate).with('page' => '5', 'per_page' => '10')
+                context "when :per_page exists in the request params" do
+                  it "paginates using :page and :per_page from the params" do
+                    params[:per_page] = '10'
+                    Model.should_receive(:paginate).with(:page => '5', :per_page => '10')
                     default.block.call(name)
                   end
                 end
-                context "when 'per_page' does not exist in the request params" do
-                  it "paginates using 'page' from the params and a default 'per_page' of 15" do
-                    Model.should_receive(:paginate).with('page' => '5', 'per_page' => '15')
+                context "when :per_page does not exist in the request params" do
+                  it "paginates using :page from the params" do
+                    Model.should_receive(:paginate).with(:page => '5', :per_page => nil)
                     default.block.call(name)
                   end
                 end
               end
-              context "when 'page' does not exist in the request params" do
+              context "when :page does not exist in the request params" do
                 it "finds all the records of the model class" do
                   Model.should_receive(:all)
                   default.block.call(name)
@@ -105,27 +105,27 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
           context "when there is not an id in the params" do
             context "when action is #{action}" do
               before { Model.stub! :paginate }
-              context "when 'page' exists in the request params" do
-                before { params['page'] = '5' }
+              context "when :page exists in the request params" do
+                before { params[:page] = '5' }
                 it "paginates the records of the model class" do
                   Model.should_receive(:paginate)
                   default.block.call(name)
                 end
-                context "when 'per_page' exists in the request params" do
-                  it "paginates using 'page' and 'per_page' from the params" do
-                    params['per_page'] = '10'
-                    Model.should_receive(:paginate).with('page' => '5', 'per_page' => '10')
+                context "when :per_page exists in the request params" do
+                  it "paginates using :page and :per_page from the params" do
+                    params[:per_page] = '10'
+                    Model.should_receive(:paginate).with(:page => '5', :per_page => '10')
                     default.block.call(name)
                   end
                 end
-                context "when 'per_page' does not exist in the request params" do
-                  it "paginates using 'page' from the params and a default 'per_page' of 15" do
-                    Model.should_receive(:paginate).with('page' => '5', 'per_page' => '15')
+                context "when :per_page does not exist in the request params" do
+                  it "paginates using :page from the params" do
+                    Model.should_receive(:paginate).with(:page => '5', :per_page => nil)
                     default.block.call(name)
                   end
                 end
               end
-              context "when 'page' does not exist in the request params" do
+              context "when :page does not exist in the request params" do
                 it "finds all the records of the model class" do
                   Model.should_receive(:all)
                   default.block.call(name)
