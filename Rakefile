@@ -59,7 +59,7 @@ namespace :gem do
   end
 end
 
-desc "Sets up the test environment for cukes"
+desc 'Sets up the test environment for cukes'
 task :setup => ['gem:install', 'generate:custom']
 
 namespace :clobber do
