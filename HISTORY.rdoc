@@ -1,3 +1,8 @@
+== 0.3.11 / 2010-06-28
+* Test Enhancement
+  * Cucumber features covering most of the basic functionality within a Rails 2.3 app (not included in gem)
+* Bug Fix
+  * RestfulRails now works correctly on an index where pagination is in effect
 == 0.3.10 / 2010-06-18
 * License
   * Rename LICENSE to MIT-LICENSE; terms remain the same
