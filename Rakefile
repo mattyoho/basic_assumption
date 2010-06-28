@@ -62,6 +62,9 @@ end
 desc 'Sets up the test environment for cukes'
 task :setup => ['gem:install', 'generate:custom']
 
+desc 'Sets up and runs the spec and cuke suites'
+task :init => [:clobber, :setup, :default]
+
 namespace :clobber do
   desc 'Remove generated Rails app'
   task :app do
