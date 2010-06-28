@@ -1,4 +1,4 @@
-Given /^a (?:|derived )widget named (.+)$/ do |widget_name|
+Given /^a (?:|derived )widget named "(.+)"$/ do |widget_name|
   @widget = Widget.create!(:name => widget_name)
 end
 
