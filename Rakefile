@@ -1,7 +1,7 @@
 require 'spec/rake/spectask'
 require 'cucumber/rake/task'
 
-task :default => :spec
+task :default => [:spec, :cucumber]
 
 desc "Run specs"
 Spec::Rake::SpecTask.new do |t|
