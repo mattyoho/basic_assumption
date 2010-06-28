@@ -1,4 +1,4 @@
-Feature: Rails controllers can make assumptions
+Feature: Rails Controllers Can Make Assumptions
 
   Scenario: controller invokes assume
     Given a file named "app/controllers/widgets_controller.rb" with:

@@ -1,4 +1,4 @@
-Feature: Rails controllers inherit assumptions
+Feature: Rails Controllers Inherit Assumptions
 
   Scenario: controller inherits assumption
     Given a file named "app/controllers/widgets_controller.rb" with:
