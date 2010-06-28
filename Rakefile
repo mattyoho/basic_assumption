@@ -46,6 +46,22 @@ namespace :generate do
   end
 end
 
+namespace :gem do
+  desc 'Builds the gem from the current gemspec'
+  task :build do
+    system 'mkdir -pp ./pkg'
+    system 'gem build ./basic_assumption.gemspec'
+    system 'mv ./basic_assumption-*.gem ./pkg/basic_assumption-EDGE.gem'
+  end
+  desc 'Installs the built gem'
+  task :install => :build do
+    system 'gem install ./pkg/basic_assumption-EDGE.gem'
+  end
+end
+
+desc "Sets up the test environment for cukes"
+task :setup => ['gem:install', 'generate:custom']
+
 namespace :clobber do
   desc 'Remove generated Rails app'
   task :app do
@@ -56,4 +72,5 @@ end
 desc 'Remove generated code'
 task :clobber do
   rm_rf './tmp'
+  rm_rf './pkg'
 end
