@@ -1,3 +1,6 @@
+== Edge / 2010-06-29
+* Feature
+  * Add simple rspec matcher
 == 0.3.11 / 2010-06-28
 * Test Enhancement
   * Cucumber features covering most of the basic functionality within a Rails 2.3 app (not included in gem)
