@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
      "lib/basic_assumption/default_assumption/rails.rb",
      "lib/basic_assumption/default_assumption/restful_rails.rb",
      "lib/basic_assumption/rails.rb",
+     "lib/basic_assumption/rspec.rb",
      "lib/basic_assumption/version.rb",
      "rails/init.rb"
   ]
