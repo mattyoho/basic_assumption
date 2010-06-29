@@ -30,8 +30,10 @@ namespace :generate do
       else
         system 'rails ./tmp/example_app'
         Dir.chdir("./tmp/example_app/") do
-          system "script/generate cucumber"
-          system 'cp ../../templates/environment.rb  ./config/'
+          system 'script/generate cucumber'
+          system 'script/generate rspec'
+          system 'cp ../../templates/environment.rb ./config/'
+          system 'cp ../../templates/test.rb ./config/environments/test.rb'
           system 'cp ../../templates/custom_steps.rb ./features/step_definitions/'
         end
       end
