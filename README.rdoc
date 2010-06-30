@@ -339,7 +339,15 @@ the following gems are installed:
 There is an .rvmrc file in the repository that will require a basic_assumption
 gemset if you're using RVM, which will help to manage the gem dependencies.
 
-Other than that, fork away and send back pull requests! Thanks.
+To run the Cucumber suite for the first time, use this Rake task:
+
+    rake init
+
+This will create an example Rails app in ./tmp and run the cukes against it.
+Use +rake+ +spec+ to run BasicAssumption's specs, or +rake+ to run specs and
+cukes.
+
+Feel free to fork away and send back pull requests, including specs! Thanks.
 
 == But should I use it?
 
