@@ -9,7 +9,7 @@ module BasicAssumption
                   :per_page,
                   :resource_attributes #:nodoc:
 
-      def initialize(name = nil, params = {}) #:nodoc:
+      def initialize(name = nil, context={}, params = {}) #:nodoc:
         super
         @action    = params['action']
         @resource_attributes = params[singular_name]
@@ -47,6 +47,15 @@ module BasicAssumption
       # find all records of the model type paginated based on the +page+
       # value in params and also a +per_page+ value. Otherwise, it returns all
       # # records for the model.
+      #
+      # It is possible to specify an alternative model name:
+      #
+      #   class WidgetController < ApplicationController
+      #     assume :sprocket, :as => :widget
+      #   end
+      #
+      # This will create a +sprocket+ method in your actions and view
+      # that will use the Widget model for its lookup.
       def block
         super
       end

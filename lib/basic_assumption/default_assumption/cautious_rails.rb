@@ -17,6 +17,15 @@ module BasicAssumption
       #   class WidgetController < ActionController::Base
       #     assume(:widget) { Widget.find(params[:widget_id]) }
       #   end
+      #
+      # It is possible to specify an alternative model name:
+      #
+      #   class WidgetController < ApplicationController
+      #     assume :sprocket, :as => :widget
+      #   end
+      #
+      # This will create a +sprocket+ method in your actions and view
+      # that will use the Widget model for its lookup.
       def block
         super
       end

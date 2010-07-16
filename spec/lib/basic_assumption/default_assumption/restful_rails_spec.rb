@@ -14,7 +14,7 @@ end
 describe BasicAssumption::DefaultAssumption::RestfulRails do
 
   context "#block" do
-    let(:default) { BasicAssumption::DefaultAssumption::RestfulRails.new(:model, params) }
+    let(:default) { BasicAssumption::DefaultAssumption::RestfulRails.new(:model, {}, params) }
 
     before(:each) do
       Model.stub!(:find)
@@ -35,12 +35,12 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
               context "when :page exists in the request params" do
                 before { params[:page] = '5' }
                 it "finds all the records of the model class" do
-                  default.block.call(name)
+                  default.block.call(name, {})
                 end
               end
               context "when :page does not exist in the request params" do
                 it "finds all the records of the model class" do
-                  default.block.call(name)
+                  default.block.call(name, {})
                 end
               end
             end
@@ -52,12 +52,12 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
               context "when :page exists in the request params" do
                 before { params[:page] = '5' }
                 it "finds all the records of the model class" do
-                  default.block.call(name)
+                  default.block.call(name, {})
                 end
               end
               context "when :page does not exist in the request params" do
                 it "finds all the records of the model class" do
-                  default.block.call(name)
+                  default.block.call(name, {})
                 end
               end
             end
@@ -77,26 +77,26 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
                 before { params[:page] = '5' }
                 it "paginates the records of the model class" do
                   Model.should_receive(:paginate)
-                  default.block.call(name)
+                  default.block.call(name, {})
                 end
                 context "when :per_page exists in the request params" do
                   it "paginates using :page and :per_page from the params" do
                     params[:per_page] = '10'
                     Model.should_receive(:paginate).with(:page => '5', :per_page => '10')
-                    default.block.call(name)
+                    default.block.call(name, {})
                   end
                 end
                 context "when :per_page does not exist in the request params" do
                   it "paginates using :page from the params" do
                     Model.should_receive(:paginate).with(:page => '5', :per_page => nil)
-                    default.block.call(name)
+                    default.block.call(name, {})
                   end
                 end
               end
               context "when :page does not exist in the request params" do
                 it "finds all the records of the model class" do
                   Model.should_receive(:all)
-                  default.block.call(name)
+                  default.block.call(name, {})
                 end
               end
             end
@@ -109,26 +109,26 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
                 before { params[:page] = '5' }
                 it "paginates the records of the model class" do
                   Model.should_receive(:paginate)
-                  default.block.call(name)
+                  default.block.call(name, {})
                 end
                 context "when :per_page exists in the request params" do
                   it "paginates using :page and :per_page from the params" do
                     params[:per_page] = '10'
                     Model.should_receive(:paginate).with(:page => '5', :per_page => '10')
-                    default.block.call(name)
+                    default.block.call(name, {})
                   end
                 end
                 context "when :per_page does not exist in the request params" do
                   it "paginates using :page from the params" do
                     Model.should_receive(:paginate).with(:page => '5', :per_page => nil)
-                    default.block.call(name)
+                    default.block.call(name, {})
                   end
                 end
               end
               context "when :page does not exist in the request params" do
                 it "finds all the records of the model class" do
                   Model.should_receive(:all)
-                  default.block.call(name)
+                  default.block.call(name, {})
                 end
               end
             end
@@ -145,14 +145,14 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
           before { params['id'] = 1 }
           it "attempts to find a model instance based off the given name" do
             Model.should_receive(:find).with(1).and_return(name)
-            default.block.call(name).should eql(name)
+            default.block.call(name, {}).should eql(name)
           end
         end
         context "and there is no id in params" do
           before { params['model'] = :initializers }
           it "creates a new model instance and passes in appropriate params" do
             Model.should_receive(:new).with(:initializers).and_return(name)
-            default.block.call(name).should eql(name)
+            default.block.call(name, {}).should eql(name)
           end
         end
       end
@@ -162,7 +162,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
 
         it "attempts to find a model instance based off the given name" do
           Model.should_receive(:find).with(42).and_return(name)
-          default.block.call(name).should eql(:model)
+          default.block.call(name, {}).should eql(:model)
         end
       end
 
@@ -171,7 +171,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
 
         it "attempts to find a model instance based off the given name" do
           Model.should_receive(:find).with(42).and_return(name)
-          default.block.call(name).should eql(:model)
+          default.block.call(name, {}).should eql(:model)
         end
       end
 
@@ -182,7 +182,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
 
         it "attempts to find a model instance based off the given name" do
           Model.should_receive(:find).with(42).and_return(name)
-          default.block.call(name).should eql(:model)
+          default.block.call(name, {}).should eql(:model)
         end
       end
 
@@ -191,7 +191,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
 
         it "attempts to find a model instance based off the given name" do
           Model.should_receive(:find).with(42).and_return(name)
-          default.block.call(name).should eql(:model)
+          default.block.call(name, {}).should eql(:model)
         end
       end
 
@@ -204,7 +204,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
         end
 
         context "the model instance" do
-        subject { default.block.call(name) }
+        subject { default.block.call(name, {}) }
           its(:age)   { should be(27) }
           its(:color) { should eql('blue') }
         end
@@ -219,7 +219,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
         end
 
         context "the model instance" do
-        subject { default.block.call(name) }
+        subject { default.block.call(name, {}) }
           its(:age)   { should be(27) }
           its(:color) { should eql('blue') }
         end

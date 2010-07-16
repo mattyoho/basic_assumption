@@ -18,12 +18,19 @@ describe BasicAssumption::DefaultAssumption::Rails do
     it "looks for a params[model_id] and params[id] in its calling context" do
       params.should_receive(:[]).with('model_id').and_return(nil)
       params.should_receive(:[]).with('id')
-      default.block.call(:model)
+      default.block.call(:model, {})
     end
 
     it "attempts to find a model instance based off the given name" do
       Model.should_receive(:find).with(42).and_return(:model)
-      default.block.call(:model).should eql(:model)
+      default.block.call(:model, {}).should eql(:model)
+    end
+
+    context "when passed an alternative model name" do
+      it "finds a model instance based off the alternative name" do
+        Model.should_receive(:find).with(42).and_return(:model)
+        default.block.call(:my_model, {:as => :model}).should eql(:model)
+      end
     end
   end
 end
