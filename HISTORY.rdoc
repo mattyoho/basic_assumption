@@ -1,6 +1,10 @@
-== Edge / 2010-06-29
-* Feature
+== 0.4.0 / 2010-07-16
+* Feature Addition
   * Add simple rspec matcher
+  * Default assumptions can now be passed a context hash from #assume
+  * Rails defaults support an :as option in the context that will specify a model name different from the name passed to #assume
+* Test Enhancement
+  * Development dependencies now managed with Bundler
 == 0.3.11 / 2010-06-28
 * Test Enhancement
   * Cucumber features covering most of the basic functionality within a Rails 2.3 app (not included in gem)
