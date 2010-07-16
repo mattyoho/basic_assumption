@@ -320,32 +320,27 @@ If you're unfamiliar with why this is being done, take a look
 {here for a start}[http://tomayko.com/writings/require-rubygems-antipattern].
 
 There is also a Cucumber suite that can be run to check BasicAssumption against
-an actual Rails app. Until Bundler has been introduced to manage the gem
-dependencies for the development environment, you will need to ensure at least
-the following gems are installed:
-
-* aruba
-* capybara
-* cucumber
-* cucumber-rails
-* database_cleaner
-* rails
-* rake
-* rspec
-* rspec-rails
-* sqlite3-ruby
-* will_paginate
+an actual Rails app.
 
 There is an .rvmrc file in the repository that will require a basic_assumption
 gemset if you're using RVM, which will help to manage the gem dependencies.
 
-To run the Cucumber suite for the first time, use this Rake task:
+The test suites are dependent on the Bundler gem. Ensure that it is installed
+with:
+
+    gem install bundler
+
+To run the Cucumber and spec suites for the first time, use these Rake tasks:
 
     rake init
+    rake
 
-This will create an example Rails app in ./tmp and run the cukes against it.
-Use +rake+ +spec+ to run BasicAssumption's specs, or +rake+ to run specs and
-cukes.
+Note that the +init+ task will +bundle+ +install+ the development dependencies,
+which includes +basic_assumption+ itself. Using the RVM gemset is recommended.
+
+This will create an example Rails app in ./tmp and run the suites against it.
+Use +rake+ +spec+ to run BasicAssumption's specs, +rake+ +cucumber+ to run the
+cukes, or +rake+ to run specs and cukes.
 
 Feel free to fork away and send back pull requests, including specs! Thanks.
 

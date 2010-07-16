@@ -1,24 +1,28 @@
-require 'spec/rake/spectask'
-require 'cucumber/rake/task'
+begin
+  require 'spec/rake/spectask'
+  require 'cucumber/rake/task'
 
-task :default => [:spec, :cucumber]
+  task :default => [:spec, :cucumber]
 
-desc "Run specs"
-Spec::Rake::SpecTask.new do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.spec_opts = %w(-fs --color)
-end
+  desc "Run specs"
+  Spec::Rake::SpecTask.new do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts = %w(-fs --color)
+  end
 
-Cucumber::Rake::Task.new(:cucumber) do |t|
-  t.cucumber_opts = %w{--format progress}
-end
+  Cucumber::Rake::Task.new(:cucumber) do |t|
+    t.cucumber_opts = %w{--format progress}
+  end
 
-desc "Run specs with rcov"
-Spec::Rake::SpecTask.new(:spec_with_rcov) do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.spec_opts = %w(-fs --color)
-  t.rcov = true
-  t.rcov_opts = ['--exclude', 'spec']
+  desc "Run specs with rcov"
+  Spec::Rake::SpecTask.new(:spec_with_rcov) do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts = %w(-fs --color)
+    t.rcov = true
+    t.rcov_opts = ['--exclude', 'spec']
+  end
+rescue LoadError
+  puts "Warning: RSpec or Cucumber is not installed"
 end
 
 namespace :generate do
@@ -51,7 +55,7 @@ end
 namespace :gem do
   desc 'Builds the gem from the current gemspec'
   task :build do
-    system 'mkdir -pp ./pkg'
+    system 'mkdir -p ./pkg'
     system 'gem build ./basic_assumption.gemspec'
     system 'mv ./basic_assumption-*.gem ./pkg/basic_assumption-EDGE.gem'
   end
@@ -61,11 +65,22 @@ namespace :gem do
   end
 end
 
+namespace :bundle do
+  desc "Installs the dependencies listed in Gemfile"
+  task :install => "gem:install" do
+    if RUBY_VERSION =~ /^1\.8/
+      system 'bundle install --without onenine'
+    elsif RUBY_VERSION =~ /^1\.9/
+      system 'bundle install --without oneeight'
+    end
+  end
+end
+
 desc 'Sets up the test environment for cukes'
-task :setup => ['gem:install', 'generate:custom']
+task :setup => ['bundle:install', 'generate:custom']
 
 desc 'Sets up and runs the spec and cuke suites'
-task :init => [:clobber, :setup, :default]
+task :init => [:clobber, :setup]
 
 namespace :clobber do
   desc 'Remove generated Rails app'

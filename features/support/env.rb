@@ -1,3 +1,5 @@
+require 'bundler'
+Bundler.setup
 require 'aruba'
 
 def aruba_path(file_or_dir)

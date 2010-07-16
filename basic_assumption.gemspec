@@ -59,18 +59,12 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, [">= 1.3.0"])
-      s.add_development_dependency(%q<actionpack>, [">= 2.3.5"])
-      s.add_development_dependency(%q<activesupport>, [">= 2.3.5"])
+      s.add_development_dependency(%q<bundler>, [">= 0.9.26"])
     else
-      s.add_dependency(%q<rspec>, [">= 1.3.0"])
-      s.add_dependency(%q<actionpack>, [">= 2.3.5"])
-      s.add_dependency(%q<activesupport>, [">= 2.3.5"])
+      s.add_dependency(%q<bundler>, [">= 0.9.26"])
     end
   else
-    s.add_dependency(%q<rspec>, [">= 1.3.0"])
-    s.add_dependency(%q<actionpack>, [">= 2.3.5"])
-    s.add_dependency(%q<activesupport>, [">= 2.3.5"])
+    s.add_dependency(%q<bundler>, [">= 0.9.26"])
   end
 end
 
