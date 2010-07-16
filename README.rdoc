@@ -116,6 +116,20 @@ In this case, the +show_mine+ action overrides the value of widget so that it
 may reuse the view template for the regular +show+ action. Overriding the
 assumed resource should be the exception, not the rule.
 
+==== Using an alternative model name
+
+BasicAssumption tends to assume a lot of things, including the name of the model
+class a default +assume+ call should try to load. If you want the name given to
++assume+ to differ from the name of the model, use the optional context hash to
+pass an +as+ option:
+
+    class WidgetController < ApplicationController
+      assume :sprocket, :as => :widget
+    end
+
+This will create a +sprocket+ method in your actions and views that will use the
+Widget model for its lookup.
+
 For more details on how BasicAssumption is wired into your Rails
 app, please see the BasicAssumption::Railtie documentation.
 
@@ -207,6 +221,29 @@ calls as well.
 
     assume :luigi, :using => :luigi_strategy
 
+=== Passing context to defaults
+
+BasicAssumption supports passing a hash of arbitrary context information when
++assume+ is called without a block. This allows configuration or optional data
+to be made available in default blocks. The built-in Rails defaults use this
+to override the name of the model that is being worked with via the :as option.
+
+Here is an example:
+
+    class Widget < ActiveRecord::Base
+      named_scope :shiny, :conditions => {:glossy => true}
+    end
+
+    class WidgetController < ActionController::Base
+      default_assumption do |name, context|
+        name.to_s.classify.constantize.send(context[:type]).find(params[:id])
+      end
+
+      assume :widget, :type => :shiny
+    end
+
+In this case, the lookups for +widget+ are scoped to ones that are shiny.
+
 === In Rails
 
 In Rails, a useful default is already active out of the box. It attempts to
@@ -216,7 +253,7 @@ following two constructs would be equivalent in your controllers:
 
     assume(:film) { Film.find(params[:film_id] || params[:id]) }
     # The above line is exactly the same as:
-    assume(:film)
+    assume :film
 
 Please see +Rails+ for implementation details . Because finding on :id
 could be considered dangerous, there is another default available for use,
@@ -259,7 +296,7 @@ that is active by default within Rails.
 
           def block
             klass = self.class
-            Proc.new do |name|
+            Proc.new do |name, context|
               klass.new(name, params).result
             end
           end
@@ -277,10 +314,11 @@ that is active by default within Rails.
     end
 
 The only method that BasicAssumption depends on in the interface of custom
-default classes is the +block+ method. Note the hoops that have to be jumped
+default classes is the +block+ method. It should return a Proc that accepts a
+a symbol/string name and a context hash. Note the hoops that have to be jumped
 through inside the implementation of +block+ in this example. Keep in mind the
 implications of evaluating the +Proc+ returned by +block+ using +instance_eval+
-(or +instance_exec+).
+(or +instance_exec+), and enclose any data the block may need at runtime.
 
 == Configuration
 
