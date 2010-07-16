@@ -51,6 +51,16 @@ describe BasicAssumption do
           end
         end
 
+        context "when an arbitrary context hash is passed to #assume" do
+          it "passes the hash to the evaluated block" do
+            extender_class.class_eval do
+              default_assumption { |name, context| context}
+              assume :has_context, :with => :foo, :and => :bar
+            end
+            extender_instance.has_context.should == {:with => :foo, :and => :bar}
+          end
+        end
+
         context "when the default is overridden" do
           it "returns the result of the overriding block" do
             extender_class.class_eval do
@@ -70,7 +80,7 @@ describe BasicAssumption do
 
           it "passes the name into the default block" do
             extender_class.class_eval do
-              default_assumption { |name| name }
+              default_assumption { |name, context| name }
               assume(:given_name)
             end
             extender_instance.given_name.should eql(:given_name)
@@ -152,7 +162,7 @@ describe BasicAssumption do
 
       before(:all) do
         application_controller.class_eval do
-          default_assumption { |name| "#{name}#{name}" }
+          default_assumption { |name, context| "#{name}#{name}" }
         end
       end
 

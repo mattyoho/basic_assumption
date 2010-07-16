@@ -21,7 +21,7 @@ module BasicAssumption
       #   end
       def block
         klass = self.class
-        Proc.new do |name|
+        Proc.new do |name, context|
           klass.new(name, params).result
         end
       end

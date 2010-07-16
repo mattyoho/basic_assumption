@@ -6,7 +6,7 @@ module BasicAssumption
       # Returns a proc that accepts an argument (which is, in practice, the
       # name that was passed to BasicAssumption#assume) and returns +nil+.
       def block
-        Proc.new { |name| }
+        Proc.new { |name, context| }
       end
     end
   end
