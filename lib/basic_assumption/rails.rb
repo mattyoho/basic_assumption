@@ -1,5 +1,7 @@
 if defined?(Rails) && Rails::VERSION::MAJOR == 3
+  require 'basic_assumption/default_assumption/cautious_rails'
   require 'basic_assumption/default_assumption/rails'
+  require 'basic_assumption/default_assumption/restful_rails'
 
   module BasicAssumption
     # Must be required explicitly in Rails 3. Extends ActionController::Base

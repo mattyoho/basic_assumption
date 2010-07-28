@@ -94,3 +94,7 @@ module BasicAssumption
   #   end
   def after_assumption(name); end
 end
+
+if defined?(Rails) && Rails::VERSION::MAJOR == 3
+  require 'basic_assumption/rails'
+end
