@@ -31,12 +31,7 @@ For Rails 2, in environment.rb:
 
 For Rails 3, in your Gemfile:
 
-    gem 'basic_assumption', :require => ['basic_assumption', 'basic_assumption/rails']
-
-It's possible to use BasicAssumption in your Rails 3 app without requiring
-'basic_assumption/rails', and will in fact allow more flexibility if you don't,
-but will incur the cost of additional setup. See the file
-'lib/basic_assumption/rails.rb' for guidance.
+    gem 'basic_assumption'
 
 To use the library in another context, it is enough to extend the
 BasicAssumption module inside the class you would like it available.
