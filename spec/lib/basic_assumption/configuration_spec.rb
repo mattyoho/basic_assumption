@@ -12,7 +12,7 @@ describe BasicAssumption::Configuration do
       extend BasicAssumption
     end
     let(:config) { BasicAssumption::Configuration.new }
-    let(:assuming_class) { Class.new Assumer }
+    let(:assuming_class) { named_class_extending Assumer }
     it "allows decent_exposure emulation mode" do
       config.emulate_exposure!
       assuming_class.should respond_to(:expose)

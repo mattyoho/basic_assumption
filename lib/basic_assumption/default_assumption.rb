@@ -29,16 +29,17 @@ module BasicAssumption
   # behavior. See the +Rails+ class for an example.
   module DefaultAssumption
     def self.register(klass, default) #:nodoc:
-      registry[klass.object_id] = strategy(default)
+      registry[klass.name] = strategy(default)
     end
 
     def self.resolve(klass) #:nodoc:
       return strategy(klass) if klass.kind_of?(Symbol)
-      while !registry.has_key?(klass.object_id)
+      while !registry.has_key?(klass.name)
         klass = superclass(klass)
         break if klass.nil?
       end
-      registry[klass.object_id]
+      lookup = klass && klass.name
+      registry[lookup]
     end
 
     class << self

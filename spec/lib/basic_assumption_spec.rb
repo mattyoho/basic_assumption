@@ -11,7 +11,7 @@ describe BasicAssumption do
 
   context "when a class extends BasicAssumption" do
 
-    let(:extender_class) { Class.new(Extender) }
+    let(:extender_class)    { named_class_extending Extender }
     let(:extender_instance) { extender_class.new }
     before(:each) do
       extender_class.extend(BasicAssumption)
@@ -132,7 +132,7 @@ describe BasicAssumption do
     before(:all) do
       require File.expand_path(File.dirname(__FILE__) + '/../../rails/init.rb')
     end
-    let(:controller_class) { Class.new(::ActionController::Base) }
+    let(:controller_class)    { named_class_extending(::ActionController::Base) }
     let(:controller_instance) { controller_class.new }
 
     it "is extended by ActionController::Base" do
@@ -156,9 +156,9 @@ describe BasicAssumption do
     end
 
     context "classes in the inheritance chain of ActionController::Base" do
-      let(:application_controller) { Class.new(controller_class) }
-      let(:derived_class) { Class.new(application_controller) }
-      let(:derived_instance) { derived_class.new }
+      let(:application_controller) { named_class_extending controller_class }
+      let(:derived_class)          { named_class_extending application_controller }
+      let(:derived_instance)       { derived_class.new }
 
       before(:all) do
         application_controller.class_eval do
