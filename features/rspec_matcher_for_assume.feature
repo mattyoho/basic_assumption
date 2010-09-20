@@ -16,7 +16,7 @@ Feature: RSpec Matcher For Assume
         it { should_not assume(:sprocket) }
       end
       """
-    When I run "spec spec/controllers/widgets_controller_spec.rb"
+    When I run "bundle exec spec spec/controllers/widgets_controller_spec.rb"
     Then I should see:
       """
       2 examples, 0 failures
