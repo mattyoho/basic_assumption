@@ -53,18 +53,7 @@ Gem::Specification.new do |s|
     "spec/lib/basic_assumption/default_assumption/rails_spec.rb",
     "spec/lib/basic_assumption/default_assumption/restful_rails_spec.rb"
   ]
-
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<bundler>, [">= 0.9.26"])
-    else
-      s.add_dependency(%q<bundler>, [">= 0.9.26"])
-    end
-  else
-    s.add_dependency(%q<bundler>, [">= 0.9.26"])
-  end
+  s.specification_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
+  s.add_development_dependency(%q<bundler>, [">= 0.9.26"])
 end
 
