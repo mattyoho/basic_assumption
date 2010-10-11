@@ -54,6 +54,5 @@ Gem::Specification.new do |s|
     "spec/lib/basic_assumption/default_assumption/restful_rails_spec.rb"
   ]
   s.specification_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-  s.add_development_dependency(%q<bundler>, [">= 0.9.26"])
 end
 
