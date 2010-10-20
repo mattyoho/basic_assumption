@@ -13,6 +13,7 @@ Feature: Restful Rails Index Action With Pagination Is Correct
 
       config.time_zone = 'UTC'
     end
+    require 'will_paginate'
     """
     And a file named "app/controllers/widgets_controller.rb" with:
       """

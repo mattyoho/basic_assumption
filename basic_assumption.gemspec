@@ -54,5 +54,15 @@ Gem::Specification.new do |s|
     "spec/lib/basic_assumption/default_assumption/restful_rails_spec.rb"
   ]
   s.specification_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
+  s.add_development_dependency("aruba", ["0.1.9"])
+  s.add_development_dependency("capybara", ["0.3.8"])
+  s.add_development_dependency("cucumber", ["0.8.3"])
+  s.add_development_dependency("cucumber-rails", ["0.3.2"])
+  s.add_development_dependency("database_cleaner", ["0.5.2"])
+  s.add_development_dependency("rails", ["2.3.5"])
+  s.add_development_dependency("rspec", ["1.3.0"])
+  s.add_development_dependency("rspec-rails", ["1.3.2"])
+  s.add_development_dependency("sqlite3-ruby", ["1.3.0"])
+  s.add_development_dependency("will_paginate", ["2.3.14"])
 end
 
