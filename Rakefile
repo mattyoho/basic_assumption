@@ -1,25 +1,16 @@
 begin
-  require 'spec/rake/spectask'
+  require 'rspec/core/rake_task'
   require 'cucumber/rake/task'
 
   task :default => [:spec, :cucumber]
 
   desc "Run specs"
-  Spec::Rake::SpecTask.new do |t|
-    t.spec_files = FileList['spec/**/*_spec.rb']
-    t.spec_opts = %w(--format=progress --color)
+  RSpec::Core::RakeTask.new do |t|
+    t.rspec_opts = %w(--format=progress --color)
   end
 
   Cucumber::Rake::Task.new(:cucumber) do |t|
     t.cucumber_opts = %w{--format progress}
-  end
-
-  desc "Run specs with rcov"
-  Spec::Rake::SpecTask.new(:spec_with_rcov) do |t|
-    t.spec_files = FileList['spec/**/*_spec.rb']
-    t.spec_opts = %w(-fs --color)
-    t.rcov = true
-    t.rcov_opts = ['--exclude', 'spec']
   end
 rescue LoadError
   puts "Warning: RSpec or Cucumber is not installed"
@@ -35,7 +26,6 @@ namespace :generate do
         system 'rails ./tmp/example_app'
         Dir.chdir("./tmp/example_app/") do
           system 'script/generate cucumber'
-          system 'script/generate rspec'
           system 'cp ../../templates/environment.rb ./config/'
           system 'cp ../../templates/test.rb ./config/environments/test.rb'
           system 'cp ../../templates/custom_steps.rb ./features/step_definitions/'

@@ -60,8 +60,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency("cucumber-rails", ["0.3.2"])
   s.add_development_dependency("database_cleaner", ["0.5.2"])
   s.add_development_dependency("rails", ["2.3.5"])
-  s.add_development_dependency("rspec", ["1.3.0"])
-  s.add_development_dependency("rspec-rails", ["1.3.2"])
+  s.add_development_dependency("rspec-rails", ["~> 2.0.1"])
   s.add_development_dependency("sqlite3-ruby", ["1.3.0"])
   s.add_development_dependency("will_paginate", ["2.3.14"])
 end

@@ -10,10 +10,16 @@ module SubclassContainer
   extend self
 end
 
-Spec::Example::ExampleGroup.class_eval do
+module BasicAssumptionSpecHelpers
   def named_class_extending(base)
     extender = Class.new(base)
     subclass_name = "Subclass_#{SubclassContainer.next_subclass_id}_#{base.name.gsub(/:+/, '_')}"
     SubclassContainer.const_set subclass_name, extender
   end
+end
+
+RSpec.configure do |config|
+  config.include(BasicAssumptionSpecHelpers)
+
+  config.mock_with :rspec
 end
