@@ -361,7 +361,7 @@ gemset if you're using RVM, which will help to manage the gem dependencies.
 The test suites are dependent on the Bundler gem. Ensure that it is installed
 with:
 
-    gem install bundler
+    gem install bundler --version="~> 1.0.3"
 
 To run the Cucumber and spec suites for the first time, use these Rake tasks:
 
