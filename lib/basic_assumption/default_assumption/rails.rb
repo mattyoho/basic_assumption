@@ -41,7 +41,11 @@ module BasicAssumption
 
       protected
       def lookup_id #:nodoc:
-        params["#{name}_id"] || params['id']
+        if context[:find_on_id]
+          params["#{name}_id"] || params['id']
+        else
+          params["#{name}_id"]
+        end
       end
 
       def model_class #:nodoc:

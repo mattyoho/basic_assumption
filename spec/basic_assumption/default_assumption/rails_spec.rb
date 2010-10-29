@@ -15,10 +15,20 @@ describe BasicAssumption::DefaultAssumption::Rails do
       default.stub!(:params).and_return(params)
     end
 
-    it "looks for a params[model_id] and params[id] in its calling context" do
-      params.should_receive(:[]).with('model_id').and_return(nil)
-      params.should_receive(:[]).with('id')
-      default.block.call(:model, {})
+    context "when context[:find_on_id] is true" do
+      it "looks for a params[model_id] and params[id] in its calling context" do
+        params.should_receive(:[]).with('model_id').and_return(nil)
+        params.should_receive(:[]).with('id')
+        default.block.call(:model, {:find_on_id => true})
+      end
+    end
+
+    context "when context[:find_on_id] is not true" do
+      it "looks for a params[model_id] in its calling context" do
+        params.should_receive(:[]).with('model_id').and_return(nil)
+        params.should_not_receive(:[]).with('id')
+        default.block.call(:model, {:find_on_id => nil})
+      end
     end
 
     it "attempts to find a model instance based off the given name" do

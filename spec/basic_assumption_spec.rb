@@ -180,7 +180,7 @@ describe BasicAssumption do
         controller_class.class_eval do
           assume(:model)
         end
-        controller_instance.stub(:params => {'id' => 123})
+        controller_instance.stub(:params => {'model_id' => 123})
         ::Model.should_receive(:find).with(123)
         controller_instance.model.should be_a_kind_of(Object)
       end
