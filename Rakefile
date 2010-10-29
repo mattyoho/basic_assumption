@@ -2,8 +2,6 @@ begin
   require 'rspec/core/rake_task'
   require 'cucumber/rake/task'
 
-  task :default => [:spec, :cucumber]
-
   desc "Run specs"
   RSpec::Core::RakeTask.new do |t|
     t.rspec_opts = %w(--format=progress --color)
@@ -15,6 +13,8 @@ begin
 rescue LoadError
   puts "Warning: RSpec or Cucumber is not installed"
 end
+
+task :default => [:spec, :cucumber]
 
 namespace :generate do
   namespace :rails3 do
