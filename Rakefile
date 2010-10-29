@@ -10,11 +10,21 @@ begin
   Cucumber::Rake::Task.new(:cucumber) do |t|
     t.cucumber_opts = %w{--format progress}
   end
+
+  Cucumber::Rake::Task.new('cucumber:rails2') do |t|
+    t.cucumber_opts = %w{--format progress --tags ~@rails3}
+  end
+
+  Cucumber::Rake::Task.new('cucumber:rails3') do |t|
+    t.cucumber_opts = %w{--format progress --tags ~@rails2}
+  end
 rescue LoadError
   puts "Warning: RSpec or Cucumber is not installed"
 end
 
 task :default => [:spec, :cucumber]
+task :rails2  => [:spec, 'cucumber:rails2']
+task :rails3  => [:spec, 'cucumber:rails3']
 
 namespace :generate do
   namespace :rails3 do

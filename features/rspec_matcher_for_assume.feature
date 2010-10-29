@@ -1,6 +1,6 @@
+@rails3 @wip
 Feature: RSpec Matcher For Assume
 
-  @wip
   Scenario: Controller spec uses the simple matcher
     Given a file named "app/controllers/widgets_controller.rb" with:
       """
