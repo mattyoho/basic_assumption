@@ -4,7 +4,7 @@ Feature: Rails Controllers Assume Find By Default
     Given a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < ApplicationController
-        assume :widget
+        assume :widget, :find_on_id => true
       end
       """
     And a file named "app/views/widgets/show.html.erb" with:
