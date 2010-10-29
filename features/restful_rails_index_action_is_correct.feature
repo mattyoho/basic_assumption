@@ -1,19 +1,7 @@
 Feature: Restful Rails Index Action Is Correct
 
   Background:
-    Given a file named "config/environment.rb" with:
-    """
-    RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
-
-    require File.join(File.dirname(__FILE__), 'boot')
-
-    Rails::Initializer.run do |config|
-      config.gem "basic_assumption"
-
-      config.time_zone = 'UTC'
-    end
-    """
-    And a file named "app/controllers/widgets_controller.rb" with:
+    Given a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < ApplicationController
         default_assumption :restful_rails
@@ -48,7 +36,7 @@ Feature: Restful Rails Index Action Is Correct
           And I should see "Ringo"
       """
     When I run "cucumber features/all_widgets_are_viewed_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       6 steps
@@ -83,7 +71,7 @@ Feature: Restful Rails Index Action Is Correct
           And I should see "New widget"
       """
     When I run "cucumber features/all_widgets_and_a_new_widget_are_viewed_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       6 steps
@@ -117,7 +105,7 @@ Feature: Restful Rails Index Action Is Correct
           And I should see "sprocket"
       """
     When I run "cucumber features/all_widgets_and_a_singular_widget_are_viewed_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       7 steps

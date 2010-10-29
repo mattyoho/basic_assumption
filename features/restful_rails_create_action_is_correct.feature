@@ -37,7 +37,7 @@ Feature: Restful Rails Create Action Is Correct
           Then I should see "created"
       """
     When I run "cucumber features/widget_is_created_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       4 steps

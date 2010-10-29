@@ -42,7 +42,7 @@ Feature: Restful Rails Destroy Action Is Correct
           And I should see "spacely"
       """
     When I run "cucumber features/widget_is_deleted_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       6 steps

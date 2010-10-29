@@ -21,7 +21,7 @@ Feature: Restful Rails Show Action Is Correct
           Then I should see "sprocket"
       """
     When I run "cucumber features/widget_is_viewed_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       3 steps

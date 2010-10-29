@@ -20,7 +20,7 @@ Feature: Rails Controllers Can Make Assumptions
           Then I should see "foobar"
       """
     When I run "cucumber features/widget_is_viewed_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       3 steps

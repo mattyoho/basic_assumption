@@ -1,21 +1,7 @@
 Feature: Restful Rails Index Action With Pagination Is Correct
 
   Background:
-    Given a file named "config/environment.rb" with:
-    """
-    RAILS_GEM_VERSION = '2.3.5' unless defined? RAILS_GEM_VERSION
-
-    require File.join(File.dirname(__FILE__), 'boot')
-
-    Rails::Initializer.run do |config|
-      config.gem "basic_assumption"
-      config.gem "will_paginate"
-
-      config.time_zone = 'UTC'
-    end
-    require 'will_paginate'
-    """
-    And a file named "app/controllers/widgets_controller.rb" with:
+    Given a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < ApplicationController
         default_assumption :restful_rails
@@ -58,7 +44,7 @@ Feature: Restful Rails Index Action With Pagination Is Correct
           And I should not see "Damian"
       """
     When I run "cucumber features/first_half_of_widgets_are_viewed_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       10 steps
@@ -90,7 +76,7 @@ Feature: Restful Rails Index Action With Pagination Is Correct
           And I should not see "Damian"
       """
     When I run "cucumber features/second_half_of_widgets_are_viewed_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       10 steps

@@ -22,7 +22,7 @@ Feature: RSpec Matcher For Assume
       end
       """
     When I run "bundle exec rspec spec/controllers/widgets_controller_spec.rb"
-    Then I should see:
+    Then the output should contain:
       """
       2 examples, 0 failures
       """

@@ -22,7 +22,7 @@ Feature: Restful Rails New Action Is Correct
           Then I should see "Widget is new"
       """
     When I run "cucumber features/widget_is_newed_by_visitor.feature"
-    Then I should see:
+    Then the output should contain:
       """
       1 scenario (1 passed)
       2 steps
