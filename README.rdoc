@@ -363,9 +363,16 @@ with:
 
     gem install bundler --version="~> 1.0.3"
 
+It is highly recommended to use RVM to manage development BasicAssumption against
+various Rails and Ruby versions. Run the following command to create an
+appropriate RVM gemset and receive a command to run manually that selects that
+gemset:
+
+    rake rvm:gemset
+
 To run the Cucumber and spec suites for the first time, use these Rake tasks:
 
-    rake init
+    rake init:rails2 #or rake init:rails3
     rake
 
 Note that the +init+ task will +bundle+ +install+ the development dependencies,

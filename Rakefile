@@ -102,7 +102,7 @@ namespace :bundle do
 end
 
 namespace :rvm do
-  desc "Creates and uses a gemset"
+  desc "Creates a gemset and outputs the command to use it"
   task :gemset do
     if `which rvm` =~ /\w+/
       gemset_name = "basic_assumption-#{RUBY_VERSION.gsub(/\./, '')}"
