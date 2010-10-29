@@ -26,7 +26,7 @@ namespace :generate do
         system 'rails new ./tmp/example_app --skip-gemfile'
 
         Dir.chdir("./tmp/example_app/") do
-          system 'rails generate cucumber'
+          system 'rails generate cucumber:install --capybara'
 
           ['Gemfile',
            'features/step_definitions/custom_steps.rb'].each do |file|
