@@ -36,12 +36,17 @@ module BasicAssumption
       end
 
       def result #:nodoc:
-        model_class.find(lookup_id)
+        begin
+          model_class.find(lookup_id)
+        rescue
+          raise if settings[:raise_error]
+          nil
+        end
       end
 
       protected
       def lookup_id #:nodoc:
-        if context[:find_on_id]
+        if settings[:find_on_id]
           params["#{name}_id"] || params['id']
         else
           params["#{name}_id"]
@@ -54,6 +59,11 @@ module BasicAssumption
 
       def model_name #:nodoc:
         context[:as] ? context[:as].to_s : name
+      end
+
+      def settings #:nodoc:
+        @global_settings ||= BasicAssumption::Configuration.settings
+        @global_settings.merge(context)
       end
     end
   end

@@ -1,3 +1,5 @@
+require 'basic_assumption/configuration/active_record'
+
 module BasicAssumption
   # Provides app-level configuration options for +BasicAssumption+.
   # Useful in a Rails initializer or something similar.
@@ -7,18 +9,24 @@ module BasicAssumption
     #     conf.default_assumption = Proc.new { "I <3 GitHub." }
     #   end
     def self.configure #:yields: config_instance
-      yield self.new
+      @configuration = self.new
+      yield @configuration
     end
 
-    # Invoke this method if you want to have API compatibility
-    # with the DecentExposure library.
-    # (http://www.github.com/voxdolo/decent_exposure)
-    # Namely, this provides +expose+ and +default_exposure+ which work
-    # identically to +assume+ and +default_assumption+ (or rather, vice-versa.)
-    def emulate_exposure!
-      BasicAssumption.module_eval do
-        alias expose assume
-        alias default_exposure default_assumption
+    def self.settings
+      @configuration.active_record.settings_hash
+    end
+
+    attr_reader :active_record #:nodoc:
+
+    def initialize #:nodoc:
+      @active_record = self.class::ActiveRecord.new
+    end
+
+    # Allows substituting another method name aside from +assume+
+    def alias_assume_to(*aliases)
+      aliases.each do |a|
+        BasicAssumption.module_eval "alias #{a} assume"
       end
     end
 
