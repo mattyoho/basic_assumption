@@ -1,21 +1,9 @@
 == BasicAssumption
 
 BasicAssumption is a gem that lets you declare resources inside of a class
-in a concise manner. It is meant to make Rails controllers and views cleaner.
-
-It is a clone of DecentExposure that adds a psuedo-modular interface for
-providing custom defaults and some useful defaults out of the box.
-
-=== What is DecentExposure?
-
-It's a plugin written by {Stephen Caudill}[http://voxdolo.me/] that provides a way of
-cleaning up Rails controller and view code. Find it at
-{its GitHub repository}[http://github.com/voxdolo/decent_exposure].
-
-DecentExposure coins an idiom for writing certain kinds of code in a declarative
-way. Particularly for your Rails apps, it's worth checking out. BasicAssumption
-is another implementation of the idiom. Check the BasicAssumption::Configuration
-options for enabling compatibility with the DecentExposure API.
+in a concise manner.  It implements an idiom for writing certain kinds of code
+in a declarative way. In particular, it's meant to make Rails controllers and
+views cleaner.
 
 == Install BasicAssumption
 
@@ -387,9 +375,9 @@ Feel free to fork away and send back pull requests, including specs! Thanks.
 == But should I use it?
 
 Sure! Absolutely. I think it's a cool idea that lets you cut down on line
-noise, particularly in your Rails controllers. You may want to consider going
-with {DecentExposure}[http://github.com/voxdolo/decent_exposure] instead, simply
-because it's used by much of {Hashrocket}[http://www.hashrocket.com/].
-But so far as I know, BasicAssumption is pretty solid. Feel free to let me know
+noise, particularly in your Rails controllers. You may also want to look at
+{DecentExposure}[http://github.com/voxdolo/decent_exposure], the
+project BasicAssumption is based on, written by {Stephen Caudill}[http://voxdolo.me/]
+of {Hashrocket}[http://www.hashrocket.com/]. Feel free to let me know
 if you use it! Email mby [at] mattyoho [dot] com with questions, comments, or
 non-sequiters.
