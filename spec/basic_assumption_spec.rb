@@ -125,6 +125,11 @@ describe BasicAssumption do
         extender_instance.writeable = 'overwritten'
         extender_instance.writeable.should eql('overwritten')
       end
+
+      it "overrides the value returned by the created instance method with nil" do
+        extender_instance.writeable = nil
+        extender_instance.writeable.should be_nil
+      end
     end
   end
 
