@@ -64,13 +64,16 @@ module BasicAssumption
   def assume(name, context={}, &block)
     define_method(name) do
       @basic_assumptions       ||= {}
-      @basic_assumptions[name] ||= if block_given?
-        instance_eval(&block)
-      else
-        which = context.delete(:using) || self.class
-        block = DefaultAssumption.resolve(which)
-        instance_exec(name, context, &block)
+      unless @basic_assumptions.key?(name)
+        @basic_assumptions[name] = if block_given?
+          instance_eval(&block)
+        else
+          which = context.delete(:using) || self.class
+          block = DefaultAssumption.resolve(which)
+          instance_exec(name, context, &block)
+        end
       end
+      @basic_assumptions[name]
     end
     define_method("#{name}=") do |value|
       @basic_assumptions       ||= {}
