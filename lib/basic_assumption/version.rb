@@ -1,8 +1,8 @@
 module BasicAssumption
   module Version
-    MAJOR  = 0
-    MINOR  = 4
-    POINT  = 1
+    MAJOR  = 5
+    MINOR  = 0
+    POINT  = 0
     STRING = "#{MAJOR}.#{MINOR}.#{POINT}"
   end
 end
