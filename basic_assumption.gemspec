@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "lib/basic_assumption.rb",
      "lib/basic_assumption/configuration.rb",
+     "lib/basic_assumption/configuration/active_record.rb",
      "lib/basic_assumption/default_assumption.rb",
      "lib/basic_assumption/default_assumption/base.rb",
      "lib/basic_assumption/default_assumption/class_resolver.rb",
