@@ -360,10 +360,9 @@ an actual Rails app.
 There is an .rvmrc file in the repository that will require a basic_assumption
 gemset if you're using RVM, which will help to manage the gem dependencies.
 
-The test suites are dependent on the Bundler gem. Ensure that it is installed
-with:
+The test suites are dependent on the Bundler gem.
 
-    gem install bundler --version="~> 1.0.3"
+    gem install bundler
 
 It is highly recommended to use RVM to manage development BasicAssumption against
 various Rails and Ruby versions. Run the following command to create an
