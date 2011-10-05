@@ -17,8 +17,35 @@ module BasicAssumption
       #   end
       #
       #   class WidgetController < ActionController::Base
-      #     assume(:widget) { Widget.find(params[:widget_id] || params[:id]) }
+      #     assume(:widget) { Widget.find(params[:widget_id]) rescue nil }
       #   end
+      #
+      # The find can also fall back to using params[:id] when
+      # :find_on_id is specified. The following are equivalent:
+      #
+      #   class WidgetController < ActionController::Base
+      #     assume :widget, :find_on_id => true
+      #   end
+      #
+      #   class WidgetController < ActionController::Base
+      #     assume(:widget) { Widget.find(params[:widget_id] || params[:id]) rescue nil }
+      #   end
+      #
+      # The find will, by default, swallow errors encountered
+      # when finding. This can be overridden by setting :raise_error.
+      #
+      #   class WidgetController < ActionController::Base
+      #     assume :widget, :raise_error => true
+      #   end
+      #
+      #   class WidgetController < ActionController::Base
+      #     assume(:widget) { Widget.find(params[:widget_id]) }
+      #   end
+      #
+      # Both of these settings can be turned on by default via
+      # configuration options, such as:
+      #
+      #   conf.active_record.raise_error = true
       #
       # It is possible to specify an alternative model name:
       #

@@ -1,3 +1,13 @@
+== 0.5.0 / 2011-10-04
+* Feature Change
+  * Default Rails assumption is now "cautious"; use find_on_id and/or raise_error for previous behavior
+  * emulate_exposure! has been removed and replaced by alias_assume_to, which only partially stands in
+* Bug Fix
+  * Assumptions can be overridden by nil (such as within a controller action)
+  * Reloading classes that include BasicAssumption (a la Rails controllers in dev mode) doesn't cause a leak
+== 0.4.1 / 2010-07-16
+* Feature Change
+  * No longer necessary to require 'basic_assumption/rails' in Gemfile
 == 0.4.0 / 2010-07-16
 * Feature Addition
   * Add simple rspec matcher

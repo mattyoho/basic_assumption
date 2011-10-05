@@ -131,7 +131,7 @@ For example, this:
 
       protected
       def find_record
-        @record = Record.find(params[:record_id] || params[:id])
+        @record = Record.find(params[:record_id])
       end
     end
 
@@ -214,7 +214,7 @@ to override the name of the model that is being worked with via the :as option.
 Here is an example:
 
     class Widget < ActiveRecord::Base
-      named_scope :shiny, :conditions => {:glossy => true}
+      named_scope :shiny, where(:glossy => true)
     end
 
     class WidgetController < ActionController::Base
@@ -238,14 +238,21 @@ following two constructs would be equivalent in your controllers:
     # The above line is exactly the same as:
     assume :film
 
-Please see +Rails+ for implementation details . Because finding on :id
-could be considered dangerous, there is another default available for use,
-+CautiousRails+, that will only find on :name_id. (In the example above,
-this would be :film_id.) Enable that for one of your controllers like so:
+Please see +Rails+ for implementation details. Though it could be considered
+a bit more dangerous to do, this standard Rails default will accept an option
+:find_on_id, that will find on params[:id] as well as params[:name_id].
+Enable that for one of your controllers like so:
 
     class FilmController < ActionController::Base
-      default_assumption :cautious_rails
+      assume :film, :find_on_id => true
     end
+
+It's also possible to have this behavior turned on by default via a
+configuration setting, which may be convenient for backwards compatibility
+with versions of BasicAssumption prior to 0.5.0. Similarly, there is a
+raise_error setting that will cause any errors that result from the attempt
+to find the record to bubble up; otherwise, they will be swallowed and the
+assumption method will return nil.
 
 Another option is :restful_rails, which attempts to provide appropriate
 behavior for the basic RESTful actions. Please see +RestfulRails+ for a
@@ -307,9 +314,16 @@ implications of evaluating the +Proc+ returned by +block+ using +instance_eval+
 
 There are a couple of configuration settings that can be set inside of
 a configuration block that can be used in places such as Rails initializer
-blocks. #emulate_exposure! will alias +assume+ and +default_assumption+ to
-+expose+ and +default_exposure+, respectively. You can also set the app-wide
-default behavior. For more information, see BasicAssumption::Configuration.
+blocks. #alias_assume_to will alias +assume+ to other names. The example
+below would alias it to +expose+ and +reveal+.  You can also set the
+app-wide default behavior. For more information, see
+BasicAssumption::Configuration.
+
+    BasicAssumption::Configuration.configure do |conf|
+      conf.default_assumption = Proc.new { "I <3 GitHub." }
+
+      conf.alias_assume_to :expose, :reveal
+    end
 
 == Issues to note
 
