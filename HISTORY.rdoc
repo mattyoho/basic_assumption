@@ -1,4 +1,7 @@
-== 0.5.0 / 2011-10-04
+== 0.5.1 / 2011-10-05
+* Bug Fix
+  * Included missing file in gem package
+== 0.5.0 / 2011-10-04 - YANKED, incorrectly published as 5.0.0
 * Feature Change
   * Default Rails assumption is now "cautious"; use find_on_id and/or raise_error for previous behavior
   * emulate_exposure! has been removed and replaced by alias_assume_to, which only partially stands in
