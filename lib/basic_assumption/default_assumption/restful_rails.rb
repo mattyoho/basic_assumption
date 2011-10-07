@@ -89,7 +89,7 @@ module BasicAssumption
       end
 
       def lookup? #:nodoc:
-        lookup_id.present? && !list?
+        lookup_id && !list?
       end
 
       def make? #:nodoc:
