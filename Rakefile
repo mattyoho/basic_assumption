@@ -115,14 +115,15 @@ namespace :rvm do
   desc "Creates a gemset and outputs the command to use it"
   task :gemset do
     if `which rvm` =~ /\w+/
-      gemset_name = "basic_assumption-#{RUBY_VERSION.gsub(/\./, '')}"
 
-      system "rvm gemset create #{gemset_name}"
+      system "rvm gemset create basic_assumption"
 
       puts "Run the following command to use an RVM gemset:"
       puts ""
-      puts "  rvm gemset use #{gemset_name}"
+      puts "  rvm gemset use basic_assumption"
       puts ""
+    else
+      puts "You don't appear to have RVM installed!"
     end
   end
 end
