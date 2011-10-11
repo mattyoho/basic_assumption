@@ -1,8 +1,5 @@
 source "http://rubygems.org"
 
-lib = File.expand_path("../lib", __FILE__)
-$:.unshift lib unless $:.include?(lib)
-
 gemspec
 
 gem "rake",             "~> 0.9.2"
