@@ -20,7 +20,7 @@ Feature: Restful Rails Show Action Is Correct
           When I view the widget
           Then I should see "sprocket"
       """
-    When I run "cucumber features/widget_is_viewed_by_visitor.feature"
+    When I run `cucumber features/widget_is_viewed_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)

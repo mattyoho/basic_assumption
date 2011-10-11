@@ -15,7 +15,7 @@ Feature: Restful Rails Create Action Is Correct
       """
     And a file named "app/views/widgets/new.html.erb" with:
       """
-      <% form_for widget do |form| %>
+      <%= form_for widget do |form| %>
         <%= form.label :name, "Name" %>
         <%= form.text_field :name %>
         <%= submit_tag "Create" %>
@@ -36,7 +36,7 @@ Feature: Restful Rails Create Action Is Correct
           And I press "Create"
           Then I should see "created"
       """
-    When I run "cucumber features/widget_is_created_by_visitor.feature"
+    When I run `cucumber features/widget_is_created_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)

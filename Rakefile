@@ -1,3 +1,6 @@
+require 'bundler'
+Bundler.setup
+
 begin
   require 'rspec/core/rake_task'
   require 'cucumber/rake/task'
@@ -7,85 +10,65 @@ begin
     t.rspec_opts = %w(--format=progress --color)
   end
 
-  Cucumber::Rake::Task.new(:cucumber) do |t|
+  Cucumber::Rake::Task.new do |t|
     t.cucumber_opts = %w{--format progress}
-  end
-
-  Cucumber::Rake::Task.new('cucumber:rails2') do |t|
-    t.cucumber_opts = %w{--format progress --tags ~@rails3}
-  end
-
-  Cucumber::Rake::Task.new('cucumber:rails3') do |t|
-    t.cucumber_opts = %w{--format progress --tags ~@rails2}
   end
 rescue LoadError
   puts "Warning: RSpec or Cucumber is not installed"
 end
 
 task :default => [:spec, :cucumber]
-task :rails2  => [:spec, 'cucumber:rails2']
-task :rails3  => [:spec, 'cucumber:rails3']
 
-namespace :generate do
-  namespace :rails3 do
-    desc 'Generate Rails 3 app for integration testing'
-    task :app do
-      unless File.directory? './tmp/example_app'
-        template_dir = '../../templates/rails3/'
+directory "tmp/example_app"
 
-        system 'rails new ./tmp/example_app --skip-gemfile'
+module BasicAssumptionRakeUtils
+  TEMPLATE_DIR = 'templates/rails/'
+end
 
-        Dir.chdir("./tmp/example_app/") do
-          system 'rails generate cucumber:install --capybara'
-
-          ['Gemfile',
-           'features/step_definitions/custom_steps.rb'].each do |file|
-            system "cp #{template_dir + file} ./#{file}"
-          end
-
-          system "bundle install"
-        end
-      end
+file "tmp/example_app/Gemfile" => "tmp/example_app" do
+  open("tmp/example_app/Gemfile", "w") do |gemfile|
+    open("#{BasicAssumptionRakeUtils::TEMPLATE_DIR}Gemfile") do |template|
+      gemfile << template.read
     end
+  end
+end
 
-    desc 'Generate scaffolds, etc'
-    task :custom => ['generate:rails3:app'] do
+namespace :example_app do
+  task :bundle => "tmp/example_app/Gemfile" do
+    Bundler.with_clean_env do
+      system 'cd ./tmp/example_app/ && bundle'
+    end
+  end
+
+  task :generate => "example_app:bundle" do
+    Bundler.with_clean_env do
       Dir.chdir("./tmp/example_app/") do
-        system "rake rails:template LOCATION='../../templates/generate_custom.rb'"
+        system 'bundle exec rails new ./ -JSGT --skip-gemfile --skip-bundle'
+        system 'bundle exec rails generate cucumber:install --capybara'
+        system 'bundle exec rails generate cucumber_rails_training_wheels:install'
       end
     end
   end
 
-  namespace :rails2 do
-    desc 'Generate Rails 2.3 app for integration testing'
-    task :app do
-      unless File.directory? './tmp/example_app'
-        template_dir = '../../templates/rails2/'
-
-        system 'rails ./tmp/example_app'
-
-        Dir.chdir("./tmp/example_app/") do
-          system 'script/generate cucumber'
-
-          ['Gemfile',
-           'config/boot.rb',
-           'config/preinitializer.rb',
-           'features/step_definitions/custom_steps.rb'].each do |file|
-            system "cp #{template_dir + file} ./#{file}"
-          end
-
-          system "bundle install"
-        end
-      end
-    end
-
-    desc 'Generate scaffolds, etc'
-    task :custom => ['generate:rails2:app'] do
+  task :customize => 'example_app:generate' do
+    Bundler.with_clean_env do
       Dir.chdir("./tmp/example_app/") do
-        system "rake rails:template LOCATION='../../templates/generate_custom.rb'"
+        system "bundle exec rake rails:template LOCATION='../../templates/generate_custom.rb'"
       end
+
+      custom_steps = 'features/step_definitions/custom_steps.rb'
+      system "cp #{BasicAssumptionRakeUtils::TEMPLATE_DIR}#{custom_steps} tmp/example_app/#{custom_steps}"
     end
   end
+end
+
+desc 'Generate customized Rails 3 app for integration testing'
+task :init => [:clobber, 'example_app:customize']
+
+desc 'Remove all generated test files'
+task :clobber do
+  rm_rf './tmp'
+  rm_rf './pkg'
 end
 
 namespace :gem do
@@ -97,23 +80,9 @@ namespace :gem do
   end
 end
 
-namespace :bundle do
-  namespace :install do
-    desc "Installs the dependencies listed in Gemfile.rails2"
-    task :rails2 do
-      system 'cp Gemfile.rails2 Gemfile && bundle install'
-    end
-
-    desc "Installs the dependencies listed in Gemfile.rails3"
-    task :rails3 do
-      system 'cp Gemfile.rails3 Gemfile && bundle install'
-    end
-  end
-end
-
 namespace :rvm do
   desc "Creates a gemset and outputs the command to use it"
-  task :gemset do
+  task :gemset  => "tmp/example_app" do
     if `which rvm` =~ /\w+/
 
       system "rvm gemset create basic_assumption"
@@ -128,31 +97,3 @@ namespace :rvm do
   end
 end
 
-namespace :setup do
-  desc 'Sets up the test environment for Rails 2.3'
-  task :rails2 => ['bundle:install:rails2', 'generate:rails2:custom']
-
-  desc 'Sets up the test environment for Rails 3'
-  task :rails3 => ['bundle:install:rails3', 'generate:rails3:custom']
-end
-
-namespace :init do
-  desc 'Sets up and runs the spec and cuke suites using Rails 2.3'
-  task :rails2 => [:clobber, 'setup:rails2']
-
-  desc 'Sets up and runs the spec and cuke suites using Rails 3'
-  task :rails3 => [:clobber, 'setup:rails3']
-end
-
-namespace :clobber do
-  desc 'Remove generated Rails app'
-  task :app do
-    rm_rf './tmp/example_app'
-  end
-end
-
-desc 'Remove generated code'
-task :clobber do
-  rm_rf './tmp'
-  rm_rf './pkg'
-end

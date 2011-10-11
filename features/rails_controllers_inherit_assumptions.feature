@@ -25,7 +25,7 @@ Feature: Rails Controllers Inherit Assumptions
           When I view the derived widget
           Then I should see "foobar"
       """
-    When I run "cucumber features/derived_widget_is_viewed_by_visitor.feature"
+    When I run `cucumber features/derived_widget_is_viewed_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)

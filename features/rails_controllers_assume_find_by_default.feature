@@ -19,7 +19,7 @@ Feature: Rails Controllers Assume Find By Default
           When I view the widget
           Then I should see "foobar"
       """
-    When I run "cucumber features/widget_is_viewed_by_visitor.feature"
+    When I run `bundle exec cucumber features/widget_is_viewed_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)
