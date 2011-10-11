@@ -41,7 +41,7 @@ Feature: Restful Rails Destroy Action Is Correct
           Then I should not see "sprocket"
           And I should see "spacely"
       """
-    When I run "cucumber features/widget_is_deleted_by_visitor.feature"
+    When I run `cucumber features/widget_is_deleted_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)

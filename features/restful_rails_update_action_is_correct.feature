@@ -35,7 +35,7 @@ Feature: Restful Rails Update Action Is Correct
           And I press "Update"
           Then I should see "after"
       """
-    When I run "cucumber features/widget_is_updated_by_visitor.feature"
+    When I run `cucumber features/widget_is_updated_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)

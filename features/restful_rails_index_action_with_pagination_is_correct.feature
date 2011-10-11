@@ -43,7 +43,7 @@ Feature: Restful Rails Index Action With Pagination Is Correct
           And I should not see "Jason"
           And I should not see "Damian"
       """
-    When I run "cucumber features/first_half_of_widgets_are_viewed_by_visitor.feature"
+    When I run `cucumber features/first_half_of_widgets_are_viewed_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)
@@ -75,7 +75,7 @@ Feature: Restful Rails Index Action With Pagination Is Correct
           And I should not see "Jason"
           And I should not see "Damian"
       """
-    When I run "cucumber features/second_half_of_widgets_are_viewed_by_visitor.feature"
+    When I run `cucumber features/second_half_of_widgets_are_viewed_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)

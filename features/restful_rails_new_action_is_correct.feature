@@ -21,7 +21,7 @@ Feature: Restful Rails New Action Is Correct
           When I go to the new widget page
           Then I should see "Widget is new"
       """
-    When I run "cucumber features/widget_is_newed_by_visitor.feature"
+    When I run `cucumber features/widget_is_newed_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)

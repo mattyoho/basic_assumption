@@ -3,7 +3,7 @@ $:.unshift lib unless $:.include?(lib)
 
 require 'bundler'
 Bundler.setup
-require 'aruba'
+require 'aruba/cucumber'
 
 def aruba_path(file_or_dir)
   File.expand_path("../../../#{file_or_dir.sub('example_app','aruba')}", __FILE__)
@@ -27,4 +27,6 @@ Before do
   Dir['tmp/example_app/*'].each do |file_or_dir|
     write_symlink(file_or_dir)
   end
+
+  @aruba_timeout_seconds = 20
 end

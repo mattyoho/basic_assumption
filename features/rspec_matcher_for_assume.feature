@@ -21,7 +21,7 @@ Feature: RSpec Matcher For Assume
         it { should_not assume(:sprocket) }
       end
       """
-    When I run "bundle exec rspec spec/controllers/widgets_controller_spec.rb"
+    When I run `bundle exec rspec spec/controllers/widgets_controller_spec.rb` with a clean Bundler environment
     Then the output should contain:
       """
       2 examples, 0 failures

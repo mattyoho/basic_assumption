@@ -35,7 +35,7 @@ Feature: Restful Rails Index Action Is Correct
           And I should see "George"
           And I should see "Ringo"
       """
-    When I run "cucumber features/all_widgets_are_viewed_by_visitor.feature"
+    When I run `cucumber features/all_widgets_are_viewed_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)
@@ -70,7 +70,7 @@ Feature: Restful Rails Index Action Is Correct
           And I should see "Theodore"
           And I should see "New widget"
       """
-    When I run "cucumber features/all_widgets_and_a_new_widget_are_viewed_by_visitor.feature"
+    When I run `cucumber features/all_widgets_and_a_new_widget_are_viewed_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)
@@ -104,7 +104,7 @@ Feature: Restful Rails Index Action Is Correct
           And I should see "Theodore"
           And I should see "sprocket"
       """
-    When I run "cucumber features/all_widgets_and_a_singular_widget_are_viewed_by_visitor.feature"
+    When I run `cucumber features/all_widgets_and_a_singular_widget_are_viewed_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)

@@ -20,7 +20,7 @@ Feature: Restful Rails Edit Action Is Correct
           When I edit the widget
           Then I should see "Editing sprocket"
       """
-    When I run "cucumber features/widget_is_edited_by_visitor.feature"
+    When I run `cucumber features/widget_is_edited_by_visitor.feature` with a clean Bundler environment
     Then the output should contain:
       """
       1 scenario (1 passed)
