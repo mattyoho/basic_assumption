@@ -36,16 +36,18 @@ end
 namespace :example_app do
   task :bundle => "tmp/example_app/Gemfile" do
     Bundler.with_clean_env do
-      system 'cd ./tmp/example_app/ && bundle'
+      Dir.chdir("./tmp/example_app/") do
+        sh 'bundle'
+      end
     end
   end
 
   task :generate => "example_app:bundle" do
     Bundler.with_clean_env do
       Dir.chdir("./tmp/example_app/") do
-        system 'bundle exec rails new ./ -JSGT --skip-gemfile --skip-bundle'
-        system 'bundle exec rails generate cucumber:install --capybara'
-        system 'bundle exec rails generate cucumber_rails_training_wheels:install'
+        sh 'bundle exec rails new ./ -JSGT --skip-gemfile --skip-bundle'
+        sh 'bundle exec rails generate cucumber:install --capybara'
+        sh 'bundle exec rails generate cucumber_rails_training_wheels:install'
       end
     end
   end
@@ -53,11 +55,11 @@ namespace :example_app do
   task :customize => 'example_app:generate' do
     Bundler.with_clean_env do
       Dir.chdir("./tmp/example_app/") do
-        system "bundle exec rake rails:template LOCATION='../../templates/generate_custom.rb'"
+        sh "bundle exec rake rails:template LOCATION='../../templates/generate_custom.rb'"
       end
 
       custom_steps = 'features/step_definitions/custom_steps.rb'
-      system "cp #{BasicAssumptionRakeUtils::TEMPLATE_DIR}#{custom_steps} tmp/example_app/#{custom_steps}"
+      sh "cp #{BasicAssumptionRakeUtils::TEMPLATE_DIR}#{custom_steps} tmp/example_app/#{custom_steps}"
     end
   end
 end
@@ -74,9 +76,9 @@ end
 namespace :gem do
   desc 'Builds the gem from the current gemspec'
   task :build do
-    system 'mkdir -p ./pkg'
-    system 'gem build ./basic_assumption.gemspec'
-    system 'mv ./basic_assumption-*.gem ./pkg/'
+    sh 'mkdir -p ./pkg'
+    sh 'gem build ./basic_assumption.gemspec'
+    sh 'mv ./basic_assumption-*.gem ./pkg/'
   end
 end
 
@@ -85,7 +87,7 @@ namespace :rvm do
   task :gemset  => "tmp/example_app" do
     if `which rvm` =~ /\w+/
 
-      system "rvm gemset create basic_assumption"
+      sh "rvm gemset create basic_assumption"
 
       puts "Run the following command to use an RVM gemset:"
       puts ""
