@@ -17,13 +17,13 @@ rescue LoadError
   puts "Warning: RSpec or Cucumber is not installed"
 end
 
-task :default => [:spec, :cucumber]
-
-directory "tmp/example_app"
-
 module BasicAssumptionRakeUtils
   TEMPLATE_DIR = 'templates/rails/'
 end
+
+task :default => [:spec, :cucumber]
+
+directory "tmp/example_app"
 
 file "tmp/example_app/Gemfile" => "tmp/example_app" do
   open("tmp/example_app/Gemfile", "w") do |gemfile|
