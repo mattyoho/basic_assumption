@@ -16,7 +16,7 @@ if defined?(Rails) && Rails::VERSION::MAJOR == 3
           # by +assume+ as a helper inside of views, and also disallows the
           # method from being called directly as a route endpoint.
           def self.after_assumption(name)
-            hide_action name
+            hide_action   name
             helper_method name
           end
         end
