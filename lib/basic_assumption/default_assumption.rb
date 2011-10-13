@@ -55,7 +55,7 @@ module BasicAssumption
         when Proc
           given
         when Symbol
-          ClassResolver.instance(given).block
+          ClassResolver.new(given).instance.block
         else
           Base.new.block
         end
