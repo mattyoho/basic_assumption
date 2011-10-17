@@ -2,10 +2,13 @@ module BasicAssumption
   module DefaultAssumption
     # Custom default behavior in the context of Rails.
     class Rails < BasicAssumption::DefaultAssumption::Base
-      attr_reader :name, :context, :params #:nodoc:
+      attr_reader :name, :context, :params, :request #:nodoc:
 
-      def initialize(name=nil, context={}, params={}) #:nodoc:
-        @name, @context, @params = name.to_s, context, params
+      def initialize(name=nil, context={}, request=nil) #:nodoc:
+        @name    = name.to_s
+        @context = context
+        @request = request
+        @params  = request.params if request
       end
       # Returns a block that will attempt to find an instance of
       # an ActiveRecord model based on the name that was given to
@@ -58,7 +61,7 @@ module BasicAssumption
       def block
         klass = self.class
         Proc.new do |name, context|
-          klass.new(name, context, params).result
+          klass.new(name, context, request).result
         end
       end
 

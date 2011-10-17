@@ -13,13 +13,13 @@ end
 
 describe BasicAssumption::DefaultAssumption::RestfulRails do
 
-  context "#block" do
-    let(:default) { BasicAssumption::DefaultAssumption::RestfulRails.new(:model, {}, params) }
+  let(:default) { BasicAssumption::DefaultAssumption::RestfulRails.new(:model, {}, request) }
+  let(:request) { stub(:params => params) }
+  let(:params)  { {} }
 
   context "#block" do
     before(:each) do
       Model.stub!(:find)
-      default.stub!(:params).and_return(params)
     end
 
     context "when the name given to assume is plural" do
@@ -141,14 +141,13 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
   end
 
   context "#make?" do
-    let(:rr) { BasicAssumption::DefaultAssumption::RestfulRails.new }
-    subject { rr.send(:make?) }
-    before { rr.stub(:list? => false, :lookup? => false) }
+    subject { default.send(:make?) }
+    before { default.stub(:list? => false, :lookup? => false) }
     context "when the action is not new or create" do
       context "when #list? is true" do
-        before { rr.stub(:list? => true) }
+        before { default.stub(:list? => true) }
         context "when #lookup? is true" do
-          before { rr.stub(:lookup? => true) }
+          before { default.stub(:lookup? => true) }
           it { should be_false }
         end
         context "when #lookup? is false" do
@@ -157,7 +156,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
       end
       context "when #list? is false" do
         context "when #lookup? is true" do
-          before { rr.stub(:lookup? => true) }
+          before { default.stub(:lookup? => true) }
           it { should be_false }
         end
         context "when #lookup? is false" do
@@ -165,13 +164,14 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
         end
       end
     end
+
     %w(new create).each do |action|
       context "when the action is #{action}" do
-        before { rr.stub(:action => action) }
+        before { default.stub(:action => action) }
         context "when #list? is true" do
-          before { rr.stub(:list? => true) }
+          before { default.stub(:list? => true) }
           context "when #lookup? is true" do
-            before { rr.stub(:lookup? => true) }
+            before { default.stub(:lookup? => true) }
             it { should be_true }
           end
           context "when #lookup? is false" do
@@ -180,7 +180,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
         end
         context "when #list? is false" do
           context "when #lookup? is true" do
-            before { rr.stub(:lookup? => true) }
+            before { default.stub(:lookup? => true) }
             it { should be_true }
           end
           context "when #lookup? is false" do

@@ -5,18 +5,13 @@ module BasicAssumption
     # Restful default behavior in the context of Rails
     class RestfulRails < BasicAssumption::DefaultAssumption::Rails
       attr_reader :action,
-                  :page,
-                  :per_page,
                   :resource_attributes #:nodoc:
 
-      def initialize(name = nil, context={}, params = {}) #:nodoc:
+      def initialize(name=nil, context={}, request=nil) #:nodoc:
         super
-        @action    = params['action']
+        @params            ||= {}
+        @action              = params['action']
         @resource_attributes = params[singular_name]
-
-        if @page = params[:page]
-          @per_page = params[:per_page]
-        end
       end
 
       # Returns a block that will attempt to do the correct thing depending
