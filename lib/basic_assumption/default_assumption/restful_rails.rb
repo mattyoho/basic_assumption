@@ -41,12 +41,8 @@ module BasicAssumption
       # Note the object will have been instantiated but not saved, destroyed,
       # etc.
       #
-      # If the name passed to assume is plural, there are two possibilities
-      # for the # behavior of +assume+. If the model responds to +paginate+ and
-      # there is a +page+ key in the +params+ hash, +assume+ will attempt to
-      # find all records of the model type paginated based on the +page+
-      # value in params and also a +per_page+ value. Otherwise, it returns all
-      # # records for the model.
+      # If the name passed to assume is plural, +assume+ returns all records
+      # for the model.
       #
       # It is possible to specify an alternative model name:
       #
@@ -73,11 +69,7 @@ module BasicAssumption
       protected
 
       def list #:nodoc:
-        if page?
-          model_class.paginate(:page => page, :per_page => per_page)
-        else
-          model_class.all
-        end
+        model_class.all
       end
 
       def list? #:nodoc:
@@ -94,10 +86,6 @@ module BasicAssumption
 
       def make? #:nodoc:
         %w(new create).include?(action) || !(lookup? || list?)
-      end
-
-      def page? #:nodoc:
-        page.present? && model_class.respond_to?(:paginate)
       end
 
       def plural_name #:nodoc:
