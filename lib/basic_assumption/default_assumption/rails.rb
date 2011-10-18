@@ -61,6 +61,7 @@ module BasicAssumption
       def block
         klass = self.class
         Proc.new do |name, context|
+          context[:controller] = self
           klass.new(name, context, request).result
         end
       end

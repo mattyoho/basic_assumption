@@ -57,7 +57,18 @@ module BasicAssumption
         elsif make?
           model_class.new(resource_attributes)
         elsif lookup?
-          model_class.find(lookup_id)
+          begin
+            if owner_method = context[:owner]
+              owner = context[:controller].send(owner_method)
+              conditions = {owner.class.name.downcase + '_id' => owner.id}
+              model_class.where(conditions).find(lookup_id)
+            else
+              model_class.find(lookup_id)
+            end
+          rescue
+            raise if settings[:raise_error]
+            nil
+          end
         end
       end
 

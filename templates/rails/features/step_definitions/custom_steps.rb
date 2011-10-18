@@ -2,6 +2,10 @@ Given /^a (?:|derived )widget named "(.+)"$/ do |widget_name|
   @widget = Widget.create!(:name => widget_name)
 end
 
+Given /^I own a widget named "(.+)"$/ do |widget_name|
+  @widget = Widget.create!(:name => widget_name, :user_id => 42)
+end
+
 Given /^the following widgets:$/ do |table|
   table.hashes.each do |widget_hash|
     Widget.create!(widget_hash)
