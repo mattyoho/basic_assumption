@@ -1,4 +1,5 @@
 require 'basic_assumption/default_assumption/rails'
+require 'basic_assumption/default_assumption/owner_builder'
 
 module BasicAssumption
   module DefaultAssumption
@@ -52,13 +53,6 @@ module BasicAssumption
       end
 
       def result #:nodoc:
-        if owner_method = context[:owner]
-          owner = context[:controller].send(owner_method)
-          owner_attributes = {owner.class.name.downcase + '_id' => owner.id}
-        else
-          owner_attributes = {}
-        end
-
         if list?
           list
         elsif make?
@@ -76,6 +70,14 @@ module BasicAssumption
       end
 
       protected
+
+      def owner_attributes
+        @owner_attributes ||= if context[:owner]
+          OwnerBuilder.new(context[:owner], context[:controller]).attributes
+        else
+          {}
+        end
+      end
 
       def list #:nodoc:
         model_class.all

@@ -3,7 +3,7 @@ require 'active_support'
 require 'basic_assumption/default_assumption/restful_rails'
 
 class Model
-  attr_accessor :age, :color
+  attr_accessor :age, :color, :owner_id
   def initialize(hash = {})
     hash.each do |k, v|
       self.send("#{k}=", v)
@@ -138,6 +138,59 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
           its(:age)   { should be(27) }
           its(:color) { should eql('blue') }
         end
+      end
+    end
+  end
+
+  context "ensuring ownership" do
+    class User
+      def id
+        5678
+      end
+    end
+
+    class Controller
+      def owner
+        User.new
+      end
+    end
+
+    let(:params) { {'id' => 123} }
+
+    it "accepts a symbol" do
+      Model.should_receive(:where).with(:user_id => 5678).and_return(stub(:find => nil))
+
+      default = BasicAssumption::DefaultAssumption::RestfulRails.new(:model, {:owner => :owner, :controller => Controller.new}, request)
+
+      default.result
+    end
+
+    it "accepts a proc" do
+      Model.should_receive(:where).with(:user_id => 5678).and_return(stub(:find => nil))
+
+      default = BasicAssumption::DefaultAssumption::RestfulRails.new(:model, {:owner => proc { owner }, :controller => Controller.new}, request)
+
+      default.result
+    end
+
+    context "with a specified column name" do
+
+      it "obeys the column name" do
+        Model.should_receive(:where).with(:user_id => 5678).and_return(stub(:find => nil))
+
+        owner_context = {:column_name => :user_id, :object => proc { owner }}
+        default = BasicAssumption::DefaultAssumption::RestfulRails.new(:model, {:owner => owner_context, :controller => Controller.new}, request)
+
+        default.result
+      end
+
+      it "obeys the column name given a proc" do
+        Model.should_receive(:where).with(:owner_id => 5678).and_return(stub(:find => nil))
+
+        owner_context = {:column_name => :owner_id, :object => :owner}
+        default = BasicAssumption::DefaultAssumption::RestfulRails.new(:model, {:owner => owner_context, :controller => Controller.new}, request)
+
+        default.result
       end
     end
   end

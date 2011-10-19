@@ -60,3 +60,38 @@ Feature: Restful Rails Scopes Find To Owner
       1 scenario (1 passed)
       3 steps
       """
+
+  Scenario: Scoping with a hash success
+    Given a file named "app/controllers/widgets_controller.rb" with:
+      """
+      class Owner
+        attr_accessor :id
+      end
+
+      class WidgetsController < AuthenticatingController
+        default_assumption :restful_rails
+        assume :widget, :owner => {:object => :current_owner, :column_name => :user_id}
+
+        def current_owner
+          Owner.new.tap {|u| u.id = 42}
+        end
+
+        rescue_from ActiveRecord::RecordNotFound do
+          render :text => "Not Found", :status => 404
+        end
+      end
+      """
+    And a file named "features/widget_is_viewed_by_owner.feature" with:
+      """
+      Feature: Find A Record Owned By You
+        Scenario: success
+          Given I own a widget named "sprocket"
+          When  I view the widget
+          Then  I should see "sprocket"
+      """
+    When I run `cucumber features/widget_is_viewed_by_owner.feature` with a clean Bundler environment
+    Then the output should contain:
+      """
+      1 scenario (1 passed)
+      3 steps
+      """
