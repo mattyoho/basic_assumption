@@ -11,7 +11,7 @@ module BasicAssumption
         super
         @params            ||= {}
         @action              = params['action']
-        @resource_attributes = params[singular_name]
+        @resource_attributes = params[singular_name] || {}
       end
 
       # Returns a block that will attempt to do the correct thing depending
@@ -52,19 +52,22 @@ module BasicAssumption
       end
 
       def result #:nodoc:
+        if owner_method = context[:owner]
+          owner = context[:controller].send(owner_method)
+          owner_attributes = {owner.class.name.downcase + '_id' => owner.id}
+        else
+          owner_attributes = {}
+        end
+
         if list?
           list
         elsif make?
-          model_class.new(resource_attributes)
+          model_class.new(resource_attributes.merge(owner_attributes))
         elsif lookup?
           begin
-            if owner_method = context[:owner]
-              owner = context[:controller].send(owner_method)
-              conditions = {owner.class.name.downcase + '_id' => owner.id}
-              model_class.where(conditions).find(lookup_id)
-            else
-              model_class.find(lookup_id)
-            end
+            record = model_class.where(owner_attributes).find(lookup_id)
+            record.attributes = resource_attributes unless request.get?
+            record
           rescue
             raise if settings[:raise_error]
             nil

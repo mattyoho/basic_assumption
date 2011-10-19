@@ -14,12 +14,14 @@ end
 describe BasicAssumption::DefaultAssumption::RestfulRails do
 
   let(:default) { BasicAssumption::DefaultAssumption::RestfulRails.new(:model, {}, request) }
-  let(:request) { stub(:params => params) }
+  let(:request) { stub(:params => params, :get? => true) }
   let(:params)  { {} }
 
   context "#block" do
+    let(:relation) { stub("where", :find => nil)  }
+
     before(:each) do
-      Model.stub!(:find)
+      Model.stub!(:where).and_return(relation)
     end
 
     context "when the name given to assume is plural" do
@@ -57,14 +59,14 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
         context "and there is an id in params" do
           before { params['id'] = 1 }
           it "attempts to find a model instance based off the given name" do
-            Model.should_receive(:find).with(1).and_return(name)
+            relation.should_receive(:find).with(1).and_return(name)
             default.block.call(name, {}).should eql(name)
           end
         end
         context "and there is no id in params" do
-          before { params['model'] = :initializers }
+          before { params['model'] = {:initializer => 'value'} }
           it "creates a new model instance and passes in appropriate params" do
-            Model.should_receive(:new).with(:initializers).and_return(name)
+            Model.should_receive(:new).with({:initializer => 'value'}).and_return(name)
             default.block.call(name, {}).should eql(name)
           end
         end
@@ -74,7 +76,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
         let(:params)  { { 'id' => 42, 'action' => 'show' } }
 
         it "attempts to find a model instance based off the given name" do
-          Model.should_receive(:find).with(42).and_return(name)
+          relation.should_receive(:find).with(42).and_return(name)
           default.block.call(name, {}).should eql(:model)
         end
       end
@@ -83,7 +85,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
         let(:params)  { { 'id' => 42, 'action' => 'edit' } }
 
         it "attempts to find a model instance based off the given name" do
-          Model.should_receive(:find).with(42).and_return(name)
+          relation.should_receive(:find).with(42).and_return(name)
           default.block.call(name, {}).should eql(:model)
         end
       end
@@ -94,7 +96,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
         end
 
         it "attempts to find a model instance based off the given name" do
-          Model.should_receive(:find).with(42).and_return(name)
+          relation.should_receive(:find).with(42).and_return(name)
           default.block.call(name, {}).should eql(:model)
         end
       end
@@ -103,7 +105,7 @@ describe BasicAssumption::DefaultAssumption::RestfulRails do
         let(:params)  { { 'id' => 42, 'action' => 'destroy' } }
 
         it "attempts to find a model instance based off the given name" do
-          Model.should_receive(:find).with(42).and_return(name)
+          relation.should_receive(:find).with(42).and_return(name)
           default.block.call(name, {}).should eql(:model)
         end
       end

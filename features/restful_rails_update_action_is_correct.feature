@@ -8,7 +8,7 @@ Feature: Restful Rails Update Action Is Correct
         assume :widget
 
         def update
-          widget.update_attributes(params[:widget])
+          widget.save
           redirect_to widget_path(widget)
         end
       end
