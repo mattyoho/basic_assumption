@@ -1,4 +1,4 @@
-Feature: Restful Rails New Action Scoped To Owner
+Feature: Rails New Action Scoped To Owner
 
   Scenario: Restful new with scoping
     Given a file named "app/controllers/authenticating_controller.rb" with:
@@ -16,7 +16,7 @@ Feature: Restful Rails New Action Scoped To Owner
     And a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < AuthenticatingController
-        default_assumption :restful_rails
+        default_assumption :rails
         assume :widget, :owner => :current_user
       end
       """

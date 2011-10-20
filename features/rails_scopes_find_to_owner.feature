@@ -1,4 +1,4 @@
-Feature: Restful Rails Scopes Find To Owner
+Feature: Rails Scopes Find To Owner
 
   Background:
     Given a file named "app/controllers/authenticating_controller.rb" with:
@@ -16,7 +16,7 @@ Feature: Restful Rails Scopes Find To Owner
     And a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < AuthenticatingController
-        default_assumption :restful_rails
+        default_assumption :rails
         assume :widget, :owner => :current_user, :raise_error => true
 
         rescue_from ActiveRecord::RecordNotFound do
@@ -69,7 +69,7 @@ Feature: Restful Rails Scopes Find To Owner
       end
 
       class WidgetsController < AuthenticatingController
-        default_assumption :restful_rails
+        default_assumption :rails
         assume :widget, :owner => {:object => :current_owner, :column_name => :user_id}
 
         def current_owner

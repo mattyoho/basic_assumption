@@ -1,10 +1,10 @@
-Feature: Restful Rails Show Action Is Correct
+Feature: Rails Show Action Is Correct
 
   Scenario: restful show
     Given a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < ApplicationController
-        default_assumption :restful_rails
+        default_assumption :rails
         assume :widget
       end
       """

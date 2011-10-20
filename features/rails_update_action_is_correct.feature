@@ -1,10 +1,10 @@
-Feature: Restful Rails Update Action Is Correct
+Feature: Rails Update Action Is Correct
 
   Scenario: restful update
     Given a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < ApplicationController
-        default_assumption :restful_rails
+        default_assumption :rails
         assume :widget
 
         def update

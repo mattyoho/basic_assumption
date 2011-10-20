@@ -1,18 +1,56 @@
+require 'basic_assumption/default_assumption/owner_builder'
+
 module BasicAssumption
   module DefaultAssumption
-    # Custom default behavior in the context of Rails.
-    class Rails < BasicAssumption::DefaultAssumption::Base
-      attr_reader :name, :context, :params, :request #:nodoc:
+    # Restful default behavior in the context of Rails
+    class Rails
+      attr_reader :action,  :context,
+                  :params,  :name,
+                  :request, :resource_attributes #:nodoc:
 
       def initialize(name=nil, context={}, request=nil) #:nodoc:
-        @name    = name.to_s
-        @context = context
-        @request = request
-        @params  = request.params if request
+        @name                = name.to_s
+        @context             = context
+        @request             = request
+        @params              = request ? request.params : {}
+        @action              = params['action']
+        @resource_attributes = params[singular_name] || {}
       end
-      # Returns a block that will attempt to find an instance of
-      # an ActiveRecord model based on the name that was given to
-      # BasicAssumption#assume and an id value in the parameters.
+
+      # Returns a block that will attempt to do the correct thing depending
+      # on the plurality of the name passed to +assume+ and the action for the
+      # current request. If the name is singular and the action is not 'new'
+      # or 'create', then +assume+ will find an instance of
+      # an ActiveRecord model of the name that it received and an id
+      # value in the parameters. If the action is 'new' or 'create', +assume+
+      # will instantiate a new instance of the model class, passing in the
+      # values it finds in the +params+ hash with for a key of the name passed
+      # to +assume+. For example:
+      #
+      #    class WidgetController < ApplicationController
+      #      default_assumption :rails
+      #      assume :widget
+      #
+      #      def create
+      #        widget.save!    # widget is: Widget.new(params[:widget])
+      #      end
+      #    end
+      #
+      # Note the object will have been instantiated but not saved, destroyed,
+      # etc.
+      #
+      # If the name passed to assume is plural, +assume+ returns all records
+      # for the model.
+      #
+      # It is possible to specify an alternative model name:
+      #
+      #   class WidgetController < ApplicationController
+      #     assume :sprocket, :as => :widget
+      #   end
+      #
+      # This will create a +sprocket+ method in your actions and view
+      # that will use the Widget model for its lookup.
+      #
       # The following two examples would be equivalent:
       #
       #   class WidgetController < ActionController::Base
@@ -49,6 +87,7 @@ module BasicAssumption
       # configuration options, such as:
       #
       #   conf.active_record.raise_error = true
+      #   conf.active_record.find_on_id  = true
       #
       # It is possible to specify an alternative model name:
       #
@@ -67,21 +106,50 @@ module BasicAssumption
       end
 
       def result #:nodoc:
-        begin
-          model_class.find(lookup_id)
-        rescue
-          raise if settings[:raise_error]
-          nil
+        if list?
+          list
+        elsif make?
+          model_class.new(resource_attributes.merge(owner_attributes))
+        elsif lookup?
+          begin
+            record = model_class.where(owner_attributes).find(lookup_id)
+            record.attributes = resource_attributes unless request.get?
+            record
+          rescue
+            raise if settings[:raise_error]
+            nil
+          end
         end
       end
 
       protected
-      def lookup_id #:nodoc:
-        if settings[:find_on_id]
-          params["#{name}_id"] || params['id']
+
+      def owner_attributes
+        @owner_attributes ||= if context[:owner]
+          OwnerBuilder.new(context[:owner], context[:controller]).attributes
         else
-          params["#{name}_id"]
+          {}
         end
+      end
+
+      def list #:nodoc:
+        model_class.all
+      end
+
+      def list? #:nodoc:
+       plural_name.eql?(model_name)
+      end
+
+      def lookup_id #:nodoc:
+        params['id']
+      end
+
+      def lookup? #:nodoc:
+        lookup_id && !list?
+      end
+
+      def make? #:nodoc:
+        %w(new create).include?(action) || !(lookup? || list?)
       end
 
       def model_class #:nodoc:
@@ -95,6 +163,13 @@ module BasicAssumption
       def settings #:nodoc:
         @global_settings ||= BasicAssumption::Configuration.settings
         @global_settings.merge(context)
+      end
+      def plural_name #:nodoc:
+        model_name.pluralize
+      end
+
+      def singular_name #:nodoc:
+        model_name.singularize
       end
     end
   end

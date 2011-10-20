@@ -185,8 +185,10 @@ describe BasicAssumption do
         controller_class.class_eval do
           assume(:model)
         end
-        controller_instance.stub(:request => stub(:params => {'model_id' => 123}))
-        ::Model.should_receive(:find).with(123)
+        controller_instance.stub(:request => stub(:params => {'id' => 123}, :get? => true))
+        relation = stub("where")
+        relation.should_receive(:find).with(123)
+        ::Model.stub(:where => relation)
         controller_instance.model
       end
     end

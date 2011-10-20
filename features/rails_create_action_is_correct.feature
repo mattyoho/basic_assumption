@@ -1,10 +1,10 @@
-Feature: Restful Rails Create Action Is Correct
+Feature: Rails Create Action Is Correct
 
   Scenario: restful create
     Given a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < ApplicationController
-        default_assumption :restful_rails
+        default_assumption :rails
         assume :widget
 
         def create

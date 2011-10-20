@@ -31,7 +31,6 @@ Gem::Specification.new do |s|
      "lib/basic_assumption/default_assumption/class_resolver.rb",
      "lib/basic_assumption/default_assumption/owner_builder.rb",
      "lib/basic_assumption/default_assumption/rails.rb",
-     "lib/basic_assumption/default_assumption/restful_rails.rb",
      "lib/basic_assumption/rails.rb",
      "lib/basic_assumption/rspec.rb",
      "lib/basic_assumption/version.rb",
@@ -49,8 +48,7 @@ Gem::Specification.new do |s|
     "spec/basic_assumption/default_assumption_spec.rb",
     "spec/basic_assumption/default_assumption/base_spec.rb",
     "spec/basic_assumption/default_assumption/class_resolver_spec.rb",
-    "spec/basic_assumption/default_assumption/rails_spec.rb",
-    "spec/basic_assumption/default_assumption/restful_rails_spec.rb"
+    "spec/basic_assumption/default_assumption/rails_spec.rb"
   ]
   s.specification_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
 

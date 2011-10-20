@@ -1,10 +1,10 @@
-Feature: Restful Rails New Action Is Correct
+Feature: Rails New Action Is Correct
 
   Scenario: restful new
     Given a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < ApplicationController
-        default_assumption :restful_rails
+        default_assumption :rails
         assume :widget
       end
       """

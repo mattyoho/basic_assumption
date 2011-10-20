@@ -1,10 +1,10 @@
-Feature: Restful Rails Destroy Action Is Correct
+Feature: Rails Destroy Action Is Correct
 
   Scenario: restful destroy
     Given a file named "app/controllers/widgets_controller.rb" with:
       """
       class WidgetsController < ApplicationController
-        default_assumption :restful_rails
+        default_assumption :rails
         assume :widget
         assume :widgets
 
