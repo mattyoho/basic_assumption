@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
      "lib/basic_assumption/default_assumption.rb",
      "lib/basic_assumption/default_assumption/base.rb",
      "lib/basic_assumption/default_assumption/class_resolver.rb",
+     "lib/basic_assumption/default_assumption/name.rb",
      "lib/basic_assumption/default_assumption/owner_builder.rb",
      "lib/basic_assumption/default_assumption/rails.rb",
      "lib/basic_assumption/rails.rb",

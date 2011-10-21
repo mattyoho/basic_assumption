@@ -5,18 +5,24 @@ module BasicAssumption
     class ClassResolver #:nodoc:
       include ActiveSupport::Inflector
 
-      def initialize(name)
-        @name = name
+      attr_reader :name, :namespace
+
+      def initialize(name, namespace='')
+        @name, @namespace = name, namespace
+      end
+
+      def klass
+        @klass ||= constantize(class_name_in_namespace)
       end
 
       def instance
-        constantize(class_name_in_namespace).new
+        klass.new
       end
 
       private
 
       def class_name_in_namespace
-        "BasicAssumption::DefaultAssumption::#{camelize(@name)}"
+        "#{namespace}::#{camelize(name)}"
       end
     end
   end

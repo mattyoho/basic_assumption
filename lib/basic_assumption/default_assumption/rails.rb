@@ -1,20 +1,17 @@
+require 'basic_assumption/default_assumption/class_resolver'
+require 'basic_assumption/default_assumption/name'
 require 'basic_assumption/default_assumption/owner_builder'
 
 module BasicAssumption
   module DefaultAssumption
     # Restful default behavior in the context of Rails
     class Rails
-      attr_reader :action,  :context,
-                  :params,  :name,
-                  :request, :resource_attributes #:nodoc:
+      attr_reader :context, :name, :request #:nodoc:
 
       def initialize(name=nil, context={}, request=nil) #:nodoc:
-        @name                = name.to_s
-        @context             = context
-        @request             = request
-        @params              = request ? request.params : {}
-        @action              = params['action']
-        @resource_attributes = params[singular_name] || {}
+        @name    = Name.new(context.delete(:as) || name)
+        @context = context
+        @request = request
       end
 
       # Returns a block that will attempt to do the correct thing depending
@@ -101,6 +98,7 @@ module BasicAssumption
         klass = self.class
         Proc.new do |name, context|
           context[:controller] = self
+
           klass.new(name, context, request).result
         end
       end
@@ -116,6 +114,22 @@ module BasicAssumption
       end
 
       protected
+
+      def model_class
+        @model_class ||= ClassResolver.new(name).klass
+      end
+
+      def params
+        @params ||= request ? request.params : {}
+      end
+
+      def action
+        params['action']
+      end
+
+      def resource_attributes
+        params[name.singular] || {}
+      end
 
       def lookup_and_maybe_raise
         begin
@@ -140,7 +154,7 @@ module BasicAssumption
       end
 
       def list? #:nodoc:
-       plural_name.eql?(model_name)
+        name.plural?
       end
 
       def lookup_id #:nodoc:
@@ -155,24 +169,9 @@ module BasicAssumption
         %w(new create).include?(action) || !(lookup? || list?)
       end
 
-      def model_class #:nodoc:
-        @model_class ||= model_name.classify.constantize
-      end
-
-      def model_name #:nodoc:
-        context[:as] ? context[:as].to_s : name
-      end
-
       def settings #:nodoc:
         @global_settings ||= BasicAssumption::Configuration.settings
         @global_settings.merge(context)
-      end
-      def plural_name #:nodoc:
-        model_name.pluralize
-      end
-
-      def singular_name #:nodoc:
-        model_name.singularize
       end
     end
   end

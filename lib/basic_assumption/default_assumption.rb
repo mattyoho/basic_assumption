@@ -55,7 +55,7 @@ module BasicAssumption
         when Proc
           given
         when Symbol
-          ClassResolver.new(given).instance.block
+          ClassResolver.new(given, 'BasicAssumption::DefaultAssumption').instance.block
         else
           Base.new.block
         end
