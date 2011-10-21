@@ -106,23 +106,26 @@ module BasicAssumption
       end
 
       def result #:nodoc:
-        if list?
-          list
-        elsif make?
+        return list if list?
+
+        if make?
           model_class.new(resource_attributes.merge(owner_attributes))
         elsif lookup?
-          begin
-            record = model_class.where(owner_attributes).find(lookup_id)
-            record.attributes = resource_attributes unless request.get?
-            record
-          rescue
-            raise if settings[:raise_error]
-            nil
-          end
+          lookup_and_maybe_raise
         end
       end
 
       protected
+
+      def lookup_and_maybe_raise
+        begin
+          record            = model_class.where(owner_attributes).find(lookup_id)
+          record.attributes = resource_attributes unless request.get?
+          record
+        rescue
+          raise if settings[:raise_error]
+        end
+      end
 
       def owner_attributes
         @owner_attributes ||= if context[:owner]
