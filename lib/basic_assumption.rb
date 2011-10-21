@@ -62,23 +62,9 @@ module BasicAssumption
   # value returned by the instance method (the reader, from this point of view)
   # to be overriden.
   def assume(name, context={}, &block)
-    define_method(name) do
-      @basic_assumptions       ||= {}
-      unless @basic_assumptions.key?(name)
-        @basic_assumptions[name] = if block_given?
-          instance_eval(&block)
-        else
-          which = context.delete(:using) || self.class
-          block = DefaultAssumption.resolve(which)
-          instance_exec(name, context, &block)
-        end
-      end
-      @basic_assumptions[name]
-    end
-    define_method("#{name}=") do |value|
-      @basic_assumptions       ||= {}
-      @basic_assumptions[name] = value
-    end
+    define_basic_assumptions
+    define_reader_method(name, context, &block)
+    define_writer_method(name)
     after_assumption(name)
   end
 
@@ -96,6 +82,35 @@ module BasicAssumption
   #     end
   #   end
   def after_assumption(name); end
+
+  private
+
+  def define_basic_assumptions
+    define_method(:basic_assumptions) do
+      @basic_assumptions ||= {}
+    end
+  end
+
+  def define_reader_method(name, context, &block)
+    define_method(name) do
+      unless basic_assumptions.key?(name)
+        basic_assumptions[name] = if block_given?
+          instance_eval(&block)
+        else
+          which = context.delete(:using) || self.class
+          block = DefaultAssumption.resolve(which)
+          instance_exec(name, context, &block)
+        end
+      end
+      basic_assumptions[name]
+    end
+  end
+
+  def define_writer_method(name)
+    define_method("#{name}=") do |value|
+      basic_assumptions[name] = value
+    end
+  end
 end
 
 if defined?(Rails) && Rails::VERSION::MAJOR == 3
