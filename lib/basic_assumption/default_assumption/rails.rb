@@ -1,3 +1,4 @@
+require 'basic_assumption/default_assumption/action'
 require 'basic_assumption/default_assumption/class_resolver'
 require 'basic_assumption/default_assumption/name'
 require 'basic_assumption/default_assumption/owner_builder'
@@ -6,12 +7,14 @@ module BasicAssumption
   module DefaultAssumption
     # Restful default behavior in the context of Rails
     class Rails
-      attr_reader :context, :name, :request #:nodoc:
+      attr_reader :action, :context, :name, :request #:nodoc:
 
       def initialize(name=nil, context={}, request=nil) #:nodoc:
-        @name    = Name.new(context.delete(:as) || name)
         @context = context
+        @name    = Name.new(context.delete(:as) || name)
         @request = request
+
+        @action  = initialize_action
       end
 
       # Returns a block that will attempt to do the correct thing depending
@@ -95,25 +98,51 @@ module BasicAssumption
       # This will create a +sprocket+ method in your actions and view
       # that will use the Widget model for its lookup.
       def block
-        klass = self.class
+        default = self
         Proc.new do |name, context|
           context[:controller] = self
 
-          klass.new(name, context, request).result
+          default.class.new(name, context, request).result
         end
       end
 
       def result #:nodoc:
-        return list if list?
-
-        if make?
-          model_class.new(resource_attributes.merge(owner_attributes))
-        elsif lookup?
-          lookup_and_maybe_raise
-        end
+        action.outcome
       end
 
       protected
+
+      def initialize_action
+        name.plural? ? plural_action : singular_action
+      end
+
+      def singular_action
+        Action.new(request) do |action|
+          action.find do
+            find_and_maybe_raise
+          end
+          action.update do
+            record            = find_and_maybe_raise
+            record.attributes = resource_attributes
+            record
+          end
+          action.default do
+            model_class.new(resource_attributes.merge(owner_attributes))
+          end
+        end
+      end
+
+      def plural_action
+        Action.new(request) do |action|
+          action.default do
+            finder_scope
+          end
+        end
+      end
+
+      def finder_scope
+        model_class.where(owner_attributes)
+      end
 
       def model_class
         @model_class ||= ClassResolver.new(name).klass
@@ -123,22 +152,16 @@ module BasicAssumption
         @params ||= request ? request.params : {}
       end
 
-      def action
-        params['action']
+      def find_and_maybe_raise
+        begin
+          finder_scope.find(params['id'])
+        rescue
+          raise if settings[:raise_error]
+        end
       end
 
       def resource_attributes
         params[name.singular] || {}
-      end
-
-      def lookup_and_maybe_raise
-        begin
-          record            = model_class.where(owner_attributes).find(lookup_id)
-          record.attributes = resource_attributes unless request.get?
-          record
-        rescue
-          raise if settings[:raise_error]
-        end
       end
 
       def owner_attributes
@@ -147,26 +170,6 @@ module BasicAssumption
         else
           {}
         end
-      end
-
-      def list #:nodoc:
-        model_class.all
-      end
-
-      def list? #:nodoc:
-        name.plural?
-      end
-
-      def lookup_id #:nodoc:
-        params['id']
-      end
-
-      def lookup? #:nodoc:
-        lookup_id && !list?
-      end
-
-      def make? #:nodoc:
-        %w(new create).include?(action) || !(lookup? || list?)
       end
 
       def settings #:nodoc:
