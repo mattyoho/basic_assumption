@@ -1,7 +1,7 @@
 require 'basic_assumption/default_assumption/action'
 require 'basic_assumption/default_assumption/class_resolver'
 require 'basic_assumption/default_assumption/name'
-require 'basic_assumption/default_assumption/owner_builder'
+require 'basic_assumption/default_assumption/owner_attributes'
 
 module BasicAssumption
   module DefaultAssumption
@@ -166,7 +166,7 @@ module BasicAssumption
 
       def owner_attributes
         @owner_attributes ||= if context[:owner]
-          OwnerBuilder.new(context[:owner], context[:controller]).attributes
+          OwnerAttributes.new(context[:owner], context[:controller]).attributes
         else
           {}
         end

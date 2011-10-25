@@ -1,6 +1,6 @@
 module BasicAssumption
   module DefaultAssumption
-    class OwnerBuilder
+    class OwnerAttributes
       attr_reader :controller, :owner_context, :owner_method
 
       def initialize(owner_method_or_context, controller)
