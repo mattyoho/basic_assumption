@@ -1,4 +1,4 @@
-if defined?(Rails) && Rails::VERSION::MAJOR == 3
+if defined?(Rails) && Rails::VERSION::MAJOR >= 3
   require 'basic_assumption/default_assumption/rails'
 
   module BasicAssumption
